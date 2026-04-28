@@ -2,14 +2,14 @@
 
 ## About Us
 
-Team Name: BBY-XX OR DTC-XX
+Team Name: BBY-09
 Team Members:
 
-- Person 1
-- Person 2
-- Person 3
-- Person 4
-- Person 5
+- Annie Fan 1B
+- Jill Bautista 1B
+- Sarah Palmer 1B
+- Varshini Sundari Babu 1B
+- Tirath Jaggee 1A
 
 ## More details to come
 
