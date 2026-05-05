@@ -1,14 +1,8 @@
-const http = require("http");
+const mongodb_host = process.env.MONGODB_HOST;
+const mongodb_user = process.env.MONGODB_USER;
+const mongodb_password = process.env.MONGODB_PASSWORD;
 
-const PORT = process.env.PORT || 3000;
-
-const requestHandler = (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Hello, world!");
-};
-
-const server = http.createServer(requestHandler);
-
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const MongoClient = require("mongodb").MongoClient;
+const atlasURI = `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/`;
+var database = new MongoClient(atlasURI, {});
+module.exports = { database };
