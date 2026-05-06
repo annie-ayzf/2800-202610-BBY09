@@ -1,14 +1,17 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(__dirname + '/public'));
+//Express files in views folder to render ejs
+app.set("view engine", "ejs");
 
-app.get('/profile', (req, res) => {
-  res.sendFile(__dirname + '/public/profile.html');
+app.use(express.static(__dirname + "/public"));
+
+app.get("/profile", (req, res) => {
+  res.sendFile(__dirname + "/public/profile.html");
 });
 
 app.listen(PORT, () => {
