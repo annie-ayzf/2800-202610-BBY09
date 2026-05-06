@@ -1,0 +1,26 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.profile-custom-flex {
+    display: flex !important;
+    justify-content: space-around !important;
+}
+
+.container-custom-flex {
+    display: flex;
+    flex-direction: column;
+}
+
+.redeem-btn {
+    width: 30%;
+    height: 50px;
+    align-self: center;
+}
