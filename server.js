@@ -1,14 +1,16 @@
-const http = require("http");
+const express = require('express');
+const path = require('path');
+
+const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-const requestHandler = (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Hello, world!");
-};
+app.use(express.static(__dirname + '/public'));
 
-const server = http.createServer(requestHandler);
+app.get('/profile', (req, res) => {
+  res.sendFile(__dirname + '/public/profile.html');
+});
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
