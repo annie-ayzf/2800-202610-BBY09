@@ -1,0 +1,29 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  padding-top: 160px;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 1rem;
+}
+
+.form-signin h1 {
+  transform: translateY(-30px);
+}
+
+.signup-fields {
+  margin-top: 50px;
+}
+
+.form-floating {
+  margin-bottom: 15px;
+}
+
+button {
+  margin-top: 15px;
+}
