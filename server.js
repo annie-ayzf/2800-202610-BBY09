@@ -77,6 +77,19 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
+app.get('/quiz', (req, res) => {
+    res.render('quiz');
+});
+
+app.get('/game', (req, res) => {
+    res.render('game');
+});
+
+app.get('/', (req, res) => {
+  res.render('quiz');
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
