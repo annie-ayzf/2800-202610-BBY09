@@ -19,10 +19,35 @@ body {
     margin-bottom: 2rem;
     justify-content: center;
     color: #fefae0 ;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .heading-element {
     align-self: center;
+}
+
+.earned-points {
+    align-self: center;
+    display: flex;
+    justify-content: space-between;
+    width: 70vw;
+    background-color: #FFFEFB;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.text-earned-points{
+     align-self: center;
+     text-align: center;
+     margin-bottom: 0;
+     color: black;
+}
+
+.plant-points-logo {
+    width: 25px;
+    height: 25px;
+    margin-top: 2px;
 }
 
 .card-custom-flex {
