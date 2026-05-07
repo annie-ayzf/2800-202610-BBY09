@@ -5,6 +5,8 @@ body {
 
 body {
   padding-top: 160px;
+  background-color: #fffefb;
+  color: #6b4f32;
 }
 
 .form-signin {
@@ -14,6 +16,7 @@ body {
 
 .form-signin h1 {
   transform: translateY(-30px);
+  color: #6b4f32;
 }
 
 .signup-fields {
@@ -24,6 +27,34 @@ body {
   margin-bottom: 15px;
 }
 
+/* Input boxes */
+.form-control {
+  background-color: #fffefb;
+  color: #6b4f32;
+  border: 2px solid #adc178;
+}
+
+.form-control:focus {
+  background-color: #fffefb;
+  color: #6b4f32;
+  border-color: #57730e;
+  box-shadow: 0 0 0 0.25rem rgba(87, 115, 14, 0.25);
+}
+
+/* Input label text */
+.form-floating label {
+  color: #6b4f32;
+}
+
+/* Sign Up button */
 button {
   margin-top: 15px;
+  background-color: #57730e !important;
+  color: #fffefb !important;
+  border: none !important;
+}
+
+button:hover {
+  background-color: #4a620c !important;
+  color: #fffefb !important;
 }
