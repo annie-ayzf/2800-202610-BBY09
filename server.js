@@ -84,7 +84,7 @@ app.get("/gameincorrect", async (req, res) => {
 
 app.get('/profile', (req, res) => {
   res.render('profile');
-  
+}); 
 app.get('/gamecorrect', (req, res) => {
     res.render('gamecorrect');
 });
