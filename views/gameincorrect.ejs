@@ -1,51 +1,72 @@
 <%- include('./templates/header') %>
+<link rel="stylesheet" href="/css/gameincorrect.css">
 
-<link rel="stylesheet" href="../src/css/gameincorrect.css">
+<div class="min-vh-100 d-flex flex-column px-3 py-4">
 
-<!-- contains the page-->
-<div class="container">
-
-   <!-- Progress bar for incorrect guess - width will be changed based on level of question -->
-<div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="width: ('<%= typeof currentQuestion !== 'undefined' ? (currentQuestion / totalQuestions) * 100 : 60 %>%>');"></div>
-</div>
-
-  <!-- Incorrect guess message-->
-  <div class="alert alert-danger" role="alert">
-  A simple danger alert with no link. Give it a click if you like.
-  </div>
-
-  <!-- Card-plant  for incorrect guess -->
-  <div class="plant-card">
-    <% if (plant && plant.image) { %>
-      <img src="<%= plant.image %>" alt="<%= plant.name %>">
-    <% } else { %>
-      <div class="plant-card-placeholder">🌿</div>
-    <% } %>
-    <div class="plant-card-info">
-      <h5><%= plant ? plant.name : 'Plant Name' %></h5>
-      <% if (plant && plant.scientific_name) { %>
-        <div class="scientific"><%= plant.scientific_name %></div>
-      <% } %>
-      <div class="location">📍 <%= plant ? plant.location : 'Location' %></div>
+  <!-- Progress bar -->
+  <div class="progress mb-3" style="height: 8px;">
+    <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-custom"
+      role="progressbar"
+      style="width: '<%= typeof currentQuestion !== 'undefined' && typeof totalQuestions !== 'undefined' ? (currentQuestion / totalQuestions) * 100 : 60 %>%';">
     </div>
   </div>
 
-  <!-- Description -->
-  <div class="description-card">
-    <div class="desc-label">⚠ Description</div>
-    <p><%= plant ? plant.description : 'Plant description will appear here.' %></p>
-  </div>
+  <!-- NOT EDIBLE banner -->
+  <div class="alert alert-danger text-center fw-bold fs-5 mb-3 not-edible-banner" role="alert">
+    ☠️ NOT EDIBLE!!
   </div>
 
-  <!-- Button to go to next question -->
-  <div class="d-grid gap-2">
-    <button class="btn btn-success" type="button">
-  <a href="/game" class="btn-continue">CONTINUE</a>
-</button>
+  <!-- Plant card -->
+  <div class="card border-0 shadow-sm mb-3 overflow-hidden">
+    <div class="row g-0">
+
+      <!-- Images -->
+     <div class="col-4 d-flex align-items-center justify-content-center" style="min-height: 120px; background-color: #606C38;">
+        <% if (plant && plant.image) { %>
+          <img
+            src="<%= plant.image %>"
+            alt=""
+            class="img-fluid w-100"
+            style="height: 120px; object-fit: cover;"
+            onerror="this.parentElement.innerHTML='<span style=\'font-size:2.5rem;\'>🌿</span>';">
+          <% } else { %>
+         <span style="font-size: 2.5rem;">🌿</span>
+        <% } %>
+      </div>
+
+      <div class="col-8">
+        <div class="card-bodyIncorrectPlants py-2 px-3">
+          <h6 class="card-title fw-bold mb-1 plant-name"><%= plant.name %></h6>
+          <% if (plant.scientificName) { %>
+            <p class="fst-italic text-muted mb-1" style="font-size:0.77rem;"><%= plant.scientificName %></p>
+          <% } %>
+          <% if (plant.habitat) { %>
+            <p class="text-muted mb-1" style="font-size:0.77rem;">Habitat: <%= plant.habitat %></p>
+          <% } %>
+          <% if (plant.location) { %>
+            <p class="text-muted mb-0" style="font-size:0.77rem;">Location: <%= plant.location %></p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description card -->
+  <div class="cardDescription border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <p class="fw-semibold mb-2 desc-label"> DESCRIPTION</p>
+      <p class="mb-0" style="font-size:0.88rem; line-height:1.65;"><%= plant.description %></p>
+    </div>
+  </div>
+
+  <!-- Spacer to push button to bottom -->
+  <div class="flex-grow-1"></div>
+
+  <!-- Continue button - full width at bottom -->
+  <div class="d-grid">
+    <a href="/game" class="btn btn-lg fw-semibold btn-continue rounded-3">CONTINUE</a>
   </div>
 
 </div>
-
 </body>
 </html>
