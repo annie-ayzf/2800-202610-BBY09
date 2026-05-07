@@ -57,9 +57,13 @@ app.get("/gameincorrect", async (req, res) => {
   }
 });
 
-app.get("/profile", (req, res) => {
-  res.sendFile(__dirname + "/public/profile.html");
+app.get('/profile', (req, res) => {
+  res.render('profile');
 });
+
+app.get('/profilemodal',(req,res)=> {
+  res.render('profilemodal');
+})
 
 app.get("/landing", (req, res) => {
   res.render("landing");
