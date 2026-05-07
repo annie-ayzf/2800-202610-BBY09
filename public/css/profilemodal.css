@@ -22,14 +22,14 @@
     align-self: end;
 }
 
-.img-seed {
+/* .img-seed {
     animation: pop-spin 1s ease;
-}
+} */
 
-.modal-img {
+/* .modal-img {
     animation: coin-spin 1.5s ease;
     transform-style: preserve-3d;
-}
+} */
 
 
 /* .modal-img {

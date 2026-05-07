@@ -10,44 +10,25 @@
 }
 
 body {
-    background-color: #fefae0;
+    background-color: #FFFEFB;
+}
+
+a {
+    text-decoration: none;
 }
 
 .heading-styling {
-    background-color: #283618;
+    background-color: #ADC178;
     height: 30vh;
     margin-bottom: 2rem;
     justify-content: center;
-    color: #fefae0 ;
+    color: #000000;
     flex-direction: column;
     gap: 30px;
 }
 
 .heading-element {
     align-self: center;
-}
-
-.earned-points {
-    align-self: center;
-    display: flex;
-    justify-content: space-between;
-    width: 70vw;
-    background-color: #FFFEFB;
-    padding: 16px;
-    border-radius: 10px;
-}
-
-.text-earned-points{
-     align-self: center;
-     text-align: center;
-     margin-bottom: 0;
-     color: black;
-}
-
-.plant-points-logo {
-    width: 25px;
-    height: 25px;
-    margin-top: 2px;
 }
 
 .card-custom-flex {
@@ -57,7 +38,7 @@ body {
     transition: transform 0.3s ease;
     padding-left: 2rem;
     padding-right: 2rem;
-    
+
 }
 
 .container-custom-flex {
@@ -75,7 +56,7 @@ body {
     width: 30%;
     height: 50px;
     align-self: center;
-    background-color: #283618;
+    background-color: #57730E;
     margin-top: 2rem;
     transition: transform 0.3s ease;
 }
@@ -89,6 +70,29 @@ body {
     justify-content: center;
 }
 
+.earned-points {
+    align-self: center;
+    display: flex;
+    justify-content: space-between;
+    width: 70vw;
+    background-color: #FFFEFB;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.text-earned-points {
+    align-self: center;
+    text-align: center;
+    margin-bottom: 0;
+    color: black;
+}
+
+.plant-points-logo {
+    width: 25px;
+    height: 25px;
+    margin-top: 2px;
+}
+
 /* modifying bootstrap css */
 .alert-danger {
     --bs-alert-border-color: #283618;
@@ -96,12 +100,12 @@ body {
 
 .btn-success {
     --bs-btn-border-color: none !important;
-    --bs-btn-hover-bg: #283618;
-    --bs-btn-hover-border-color: #283618;
+    --bs-btn-hover-bg: #57730E;
+    --bs-btn-hover-border-color: #57730E;
+    --bs-btn-active-bg: #57730E;
 }
 
 .bg-light {
-    background-color: #fefae0 !important;
+    background-color: #FFFEFB !important;
     border-color: #dda15e;
 }
-
