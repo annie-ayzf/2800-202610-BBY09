@@ -57,6 +57,34 @@ app.get("/gameincorrect", async (req, res) => {
   }
 });
 
+// const profileModalItems = [{
+//   rewardImgName = "seedColor",
+//   rewardName = "Seed"
+// },
+// {
+//   rewardImgName = "SproutColor1",
+//   rewardName = "Sprout"
+// },
+// {
+//   rewardImgName = "SeedlingColor",
+//   rewardName = "Seedling"
+// },
+
+// {
+//   rewardImgName = "youngTreeColor",
+//   rewardName = "Young Tree"
+// },
+
+// {
+//   rewardImgName = "fruitTreeColor_1",
+//   rewardName = "Fruit Tree"
+// },
+
+// ];
+
+app.get('/profile', (req, res) => {
+  res.render('profile');
+}); 
 app.get('/gamecorrect', (req, res) => {
     res.render('gamecorrect');
 });
@@ -65,12 +93,8 @@ app.get('/gameresult', (req, res) => {
     res.render('gameresult');
 });
 
-app.get("/profile", (req, res) => {
-  res.render("profile");
-});
-
-app.get("/profilemodal", (req, res) => {
-  res.render("profilemodal");
+app.get('/profilemodal', (req, res) => {
+  res.render('profilemodal');
 });
 
 app.get("/", (req, res) => {
