@@ -57,14 +57,20 @@ app.get("/gameincorrect", async (req, res) => {
   }
 });
 
-app.get('/profile', (req, res) => {
-  res.render('profile');
+app.get("/profile", (req, res) => {
+<<<<<<< HEAD
+  res.sendFile(__dirname + "/public/profile.html");
 });
 
-app.get('/profilemodal',(req,res)=> {
-  res.render('profilemodal');
-})
+=======
+  res.render("profile");
+});
 
+app.get("/profilemodal", (req, res) => {
+  res.render("profilemodal");
+});
+
+>>>>>>> 99739c94f0e27e7d8195d21828ad9ef75ed3700b
 app.get("/landing", (req, res) => {
   res.render("landing");
 });
@@ -77,23 +83,21 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.get('/quiz', (req, res) => {
-    res.render('quiz');
+<<<<<<< HEAD
+=======
+app.get("/quiz", (req, res) => {
+  res.render("quiz");
 });
 
-app.get('/info', (req, res) => {
-    res.render('info');
+app.get("/info", (req, res) => {
+  res.render("info");
 });
 
-app.get('/game', (req, res) => {
-    res.render('game');
+app.get("/game", (req, res) => {
+  res.render("game");
 });
 
-app.get('/', (req, res) => {
-  res.render('quiz');
-});
-
-
+>>>>>>> 99739c94f0e27e7d8195d21828ad9ef75ed3700b
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
