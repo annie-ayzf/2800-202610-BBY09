@@ -81,6 +81,10 @@ app.get('/quiz', (req, res) => {
     res.render('quiz');
 });
 
+app.get('/info', (req, res) => {
+    res.render('info');
+});
+
 app.get('/game', (req, res) => {
     res.render('game');
 });
