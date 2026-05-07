@@ -14,8 +14,12 @@ app.set("view engine", "ejs");
 
 app.use(express.static(__dirname + "/public"));
 
-app.get("/profile", (req, res) => {
-  res.sendFile(__dirname + "/public/profile.html");
+app.get('/profile', (req, res) => {
+  res.render('profile');
+});
+
+app.get('/profilemodal', (req, res) => {
+  res.render('profilemodal');
 });
 
 app.get('/landing', (req, res) => {
