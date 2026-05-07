@@ -57,13 +57,13 @@ app.get("/gameincorrect", async (req, res) => {
   }
 });
 
-app.get('/profile', (req, res) => {
-  res.render('profile');
+app.get("/profile", (req, res) => {
+  res.render("profile");
 });
 
-app.get('/profilemodal',(req,res)=> {
-  res.render('profilemodal');
-})
+app.get("/profilemodal", (req, res) => {
+  res.render("profilemodal");
+});
 
 app.get("/landing", (req, res) => {
   res.render("landing");
@@ -77,22 +77,17 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.get('/quiz', (req, res) => {
-    res.render('quiz');
+app.get("/quiz", (req, res) => {
+  res.render("quiz");
 });
 
-app.get('/info', (req, res) => {
-    res.render('info');
+app.get("/info", (req, res) => {
+  res.render("info");
 });
 
-app.get('/game', (req, res) => {
-    res.render('game');
+app.get("/game", (req, res) => {
+  res.render("game");
 });
-
-app.get('/', (req, res) => {
-  res.render('quiz');
-});
-
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -40,10 +40,11 @@ body {
 
 /* Description label */
 .desc-label {
-  color: var(--brown);
+  color: var(--white);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  background-color: #606c38;
 }
 
 /* Continue button */
