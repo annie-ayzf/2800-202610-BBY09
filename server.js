@@ -61,6 +61,10 @@ app.get('/gamecorrect', (req, res) => {
     res.render('gamecorrect');
 });
 
+app.get('/gameresult', (req, res) => {
+    res.render('gameresult');
+});
+
 app.get("/profile", (req, res) => {
   res.render("profile");
 });
