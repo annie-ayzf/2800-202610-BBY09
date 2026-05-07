@@ -42,6 +42,10 @@ body {
     padding-right: 2rem;
 }
 
+.card-custom-flex:hover {
+    background-color: #b0a34b !important;
+}
+
 .redeem-btn {
     width: 30%;
     height: 50px;
@@ -53,6 +57,11 @@ body {
 
 .redeem-btn:hover {
     transform: scale(1.15);
+}
+
+.redeem-btn-align {
+    display: inline-flex;
+    justify-content: center;
 }
 
 /* modifying bootstrap css */
