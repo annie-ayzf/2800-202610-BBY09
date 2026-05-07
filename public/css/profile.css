@@ -9,18 +9,65 @@
     padding: 0;
 }
 
-.profile-custom-flex {
+body {
+    background-color: #fefae0;
+}
+
+.heading-styling {
+    background-color: #283618;
+    height: 30vh;
+    margin-bottom: 2rem;
+    justify-content: center;
+    color: #fefae0 ;
+}
+
+.heading-element {
+    align-self: center;
+}
+
+.card-custom-flex {
     display: flex !important;
     justify-content: space-around !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    
 }
 
 .container-custom-flex {
     display: flex;
     flex-direction: column;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 .redeem-btn {
     width: 30%;
     height: 50px;
     align-self: center;
+    background-color: #283618;
+    margin-top: 2rem;
+    transition: transform 0.3s ease;
 }
+
+.redeem-btn:hover {
+    transform: scale(1.15);
+}
+
+/* modifying bootstrap css */
+.alert-danger {
+    --bs-alert-border-color: #283618;
+}
+
+.btn-success {
+    --bs-btn-border-color: none !important;
+    --bs-btn-hover-bg: #283618;
+    --bs-btn-hover-border-color: #283618;
+}
+
+.bg-light {
+    background-color: #fefae0 !important;
+    border-color: #dda15e;
+}
+
