@@ -105,21 +105,6 @@ body {
     background-color: #b8c98a;
 }
 
-/* FOOTER */
-.bottom-nav {
-    height: 75px;
-    background-color: #8b6b47;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: auto;
-}
-
-.nav-icon {
-    font-size: 40px;
-    color: white;
-}
-
 /* SMALL SCREENS */
 @media (max-width: 400px) {
     .question-box {
