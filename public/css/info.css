@@ -27,3 +27,21 @@
   height: 24px;
   object-fit: contain;
 }
+
+.card {
+  background-color: #ADC178;
+  color: #FFFEFB;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.card-body {
+    border-top: 1px solid #FFFEFB;
+}
+
+.list-group-item {
+  background-color: #ADC178;
+  color: #FFFEFB;
+  border-color: rgba(255, 254, 251, 0.5);
+}
