@@ -57,6 +57,10 @@ app.get("/gameincorrect", async (req, res) => {
   }
 });
 
+app.get('/gamecorrect', (req, res) => {
+    res.render('gamecorrect');
+});
+
 app.get("/profile", (req, res) => {
   res.render("profile");
 });
