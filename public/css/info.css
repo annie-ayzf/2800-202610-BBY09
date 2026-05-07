@@ -1,0 +1,29 @@
+.search-input {
+  border-color: #6B4F32;
+}
+
+.search-input:focus {
+  border-color: #adc178;
+  box-shadow: 0 0 0 0.25rem rgba(173, 193, 120, 0.25);
+}
+
+.search-form {
+  width: 500px;
+}
+
+.filter-button {
+  border: 1px solid #6B4F32;
+  background-color: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
