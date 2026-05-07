@@ -65,8 +65,8 @@ app.get('/profilemodal',(req,res)=> {
   res.render('profilemodal');
 })
 
-app.get("/landing", (req, res) => {
-  res.render("landing");
+app.get("/", (req, res) => {
+  res.render("index");
 });
 
 app.get("/signup", (req, res) => {
@@ -88,11 +88,6 @@ app.get('/info', (req, res) => {
 app.get('/game', (req, res) => {
     res.render('game');
 });
-
-app.get('/', (req, res) => {
-  res.render('quiz');
-});
-
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
