@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const { connectDB } = require("./config/database");
 const app = express();
 
@@ -57,16 +58,13 @@ app.get("/gameincorrect", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-  res.sendFile(__dirname + "/public/profile.html");
-});
-
-app.get("/profileejs", (req, res) => {
   res.render("profile");
 });
 
 app.get("/profilemodal", (req, res) => {
   res.render("profilemodal");
 });
+
 app.get("/landing", (req, res) => {
   res.render("landing");
 });
