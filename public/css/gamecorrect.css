@@ -40,16 +40,18 @@ body {
     border-radius: 20px;
 }
 
-/* QUESTION NUMBER CIRCLE */
+/* POINTS CIRCLE NOW */
 .question-number {
-    width: 38px;
-    height: 38px;
-    background-color: #8b6b47;
+    width: 40px;
+    height: 40px;
+    background-color: #d4aa5a;
     color: white;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 /* QUESTION BOX */
@@ -116,10 +118,10 @@ body {
 
 /* TRUE BUTTON */
 .true-btn {
-    background-color: #8b6b47;
+    background-color:#5DCE80;
 }
 
 /* FALSE BUTTON */
 .false-btn {
-    background-color: #b8c98a;
+    background-color:#5EBACD;
 }
