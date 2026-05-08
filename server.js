@@ -16,6 +16,8 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(__dirname + "/public"));
+app.use("/js", express.static(path.join(__dirname, "src/js")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.get("/game", (req, res) => {
   res.render("game");
@@ -89,8 +91,8 @@ app.get('/gamecorrect', (req, res) => {
     res.render('gamecorrect');
 });
 
-app.get('/gameresult', (req, res) => {
-    res.render('gameresult');
+app.get("/gameresult", (req, res) => {
+  res.render("gameresult");
 });
 
 app.get('/profilemodal', (req, res) => {
