@@ -8,6 +8,7 @@ const app = express();
 //Tells express to use the views folder for ejs
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
+app.use("/js", express.static(path.join(__dirname, "src/js")));
 
 const PORT = process.env.PORT || 3000;
 
@@ -59,51 +60,59 @@ app.get("/gameincorrect", async (req, res) => {
   }
 });
 
-const rewards =[{
+const rewards = [
+  {
     id: "seed-option",
     value: "seed",
     pointsImg: "5PlantPoints",
-    rewardImg:"Seed"
-},
-{
+    rewardImg: "Seed",
+  },
+  {
     id: "sprout-option",
     value: "sprout",
     pointsImg: "10PlantPoints",
-    rewardImg:"Sprout"
-},
-{
+    rewardImg: "Sprout",
+  },
+  {
     id: "seedling-option",
     value: "seedling",
     pointsImg: "15PlantPoints",
-    rewardImg:"seedling"
-},
-{
+    rewardImg: "seedling",
+  },
+  {
     id: "youngTree-option",
     value: "youngTree",
     pointsImg: "20PlantPoints",
-    rewardImg:"youngTree"
-},
-{
+    rewardImg: "youngTree",
+  },
+  {
     id: "fruitTree-option",
     value: "fruitTree",
     pointsImg: "25PlantPoints",
-    rewardImg:"fruitTree"
-}
+    rewardImg: "fruitTree",
+  },
 ];
 
-app.get('/profile', (req, res) => {
-  res.render('profile',{rewards});
-}); 
-app.get('/gamecorrect', (req, res) => {
-    res.render('gamecorrect');
+app.get("/profile", (req, res) => {
+  res.render("profile");
+});
+app.get("/gamecorrect", (req, res) => {
+  res.render("gamecorrect");
+});
+
+app.get("/profile", (req, res) => {
+  res.render("profile", { rewards });
+});
+app.get("/gamecorrect", (req, res) => {
+  res.render("gamecorrect");
 });
 
 app.get("/gameresult", (req, res) => {
   res.render("gameresult");
 });
 
-app.get('/profilemodal', (req, res) => {
-  res.render('profilemodal');
+app.get("/profilemodal", (req, res) => {
+  res.render("profilemodal");
 });
 
 app.get("/", (req, res) => {
