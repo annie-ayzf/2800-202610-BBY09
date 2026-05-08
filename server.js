@@ -2,18 +2,16 @@ const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
+require('dotenv').config();
+const MongoStore = require('connect-mongo').default;
+const session = require("express-session");
+
+
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const { connectDB } = require("./config/database");
 const app = express();
-
-//Tells express to use the views folder for ejs
-app.set("view engine", "ejs");
-app.set("views", __dirname + "/views");
-app.use("/js", express.static(path.join(__dirname, "src/js")));
-
-const PORT = process.env.PORT || 3000;
 
 //Express files in views folder to render ejs
 app.set("view engine", "ejs");
@@ -22,6 +20,67 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(__dirname + "/public"));
 app.use("/js", express.static(path.join(__dirname, "src/js")));
 app.use("/images", express.static(path.join(__dirname, "images")));
+
+const mongoSanitize = require('express-mongo-sanitize');
+
+const PORT = process.env.PORT || 3000;
+const expireTime = 365 * 24 * 60 * 60 * 1000; //1 year
+
+//Secret section
+const mongodb_host = process.env.MONGODB_HOST;
+const mongodb_user = process.env.MONGODB_USER;
+const mongodb_password = process.env.MONGODB_PASSWORD;
+const mongodb_database = process.env.MONGODB_DATABASE;
+const mongodb_session_database = process.env.MONGODB_SESSION_DATABASE;
+const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
+
+const node_session_secret = process.env.NODE_SESSION_SECRET;
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+//hack for express 5.x not setting req.query as writable
+app.use((req, _res, next) => {
+  Object.defineProperty(req, "query", {
+    ...Object.getOwnPropertyDescriptor(req, "query"),
+    value: req.query,
+    writable: true,
+  });
+
+  next();
+});
+
+app.use(
+  mongoSanitize({
+    replaceWith: "%",
+  })
+);
+
+
+//create a mongoDB place to store session data
+var mongoStore = MongoStore.create({
+    mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_session_database}`,
+    crypto: {
+        secret: mongodb_session_secret
+    },
+    ttl: 365 * 24 * 60 * 60
+});
+
+//turns on session. what allows login to be remembered
+app.use(session({
+    secret: node_session_secret,
+    store: mongoStore,
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge: expireTime
+    }
+}
+));
+
+//linking signup-login.js
+const authRoutes = require("./src/routes/signup-login");
+app.use("/", authRoutes);
 
 app.get("/game", (req, res) => {
   res.render("game");
@@ -115,17 +174,23 @@ app.get("/profilemodal", (req, res) => {
   res.render("profilemodal");
 });
 
+//if theres a session go to quiz.ejs
 app.get("/", (req, res) => {
+  if (req.session.authenticated) {
+    res.redirect("/quiz");
+    return;
+  }
+
   res.render("index");
 });
 
-app.get("/signup", (req, res) => {
-  res.render("signup");
-});
+// app.get("/signup", (req, res) => {
+//   res.render("signup");
+// });
 
-app.get("/login", (req, res) => {
-  res.render("login");
-});
+// app.get("/login", (req, res) => {
+//   res.render("login");
+// });
 
 app.get("/quiz", (req, res) => {
   res.render("quiz");
@@ -133,10 +198,6 @@ app.get("/quiz", (req, res) => {
 
 app.get("/info", (req, res) => {
   res.render("info");
-});
-
-app.get("/", (req, res) => {
-  res.render("quiz");
 });
 
 app.listen(PORT, () => {
