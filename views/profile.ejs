@@ -31,44 +31,24 @@
     </div>
   </div>
 
-  <div class="container container-custom-flex">
-    <div class="alert alert-danger bg-light card-custom-flex">
-      <img src="/images/5PlantPoints.svg" alt="" class="plant-points">
-      <img src="/images/Arrow.svg" alt="" class="plant-points">
-      <img src="/images/Seed.svg" alt="" class="plant-points">
-    </div>
+  <div class="container ">
+    <form action="/profilemodal" method="POST" class="container-custom-flex">
 
+      <% for(let reward of rewards) { %>
+        <label for="<%= reward.id %>-option">
+          <input type="radio" id="<%= reward.id %>-option" value="<%= reward.value %>" name="reward">
+          <div class="alert alert-danger bg-light card-custom-flex">
+            <img src="/images/<%= reward.pointsImg %>.svg" alt="" class="plant-points">
+            <img src="/images/Arrow.svg" alt="" class="plant-points">
+            <img src="/images/<%= reward.rewardImg %>.svg" alt="" class="plant-points">
+          </div>
+        </label>
 
-    <div class="alert alert-danger bg-light card-custom-flex">
-      <img src="/images/10PlantPoints.svg" alt="" class="plant-points">
-      <img src="/images/Arrow.svg" alt="" class="plant-points">
-      <img src="/images/Sprout.svg" alt="" class="plant-points">
-    </div>
+        <% } %>
 
+          <button type="submit" class="btn btn-success redeem-btn">Redeem</button>
 
-    <div class="alert alert-danger bg-light card-custom-flex">
-      <img src="/images/15PlantPoints.svg" alt="" class="plant-points">
-      <img src="/images/Arrow.svg" alt="" class="plant-points">
-      <img src="/images/seedling.svg" alt="" class="plant-points">
-    </div>
-
-
-    <div class="alert alert-danger bg-light card-custom-flex">
-      <img src="/images/20PlantPoints.svg" alt="" class="plant-points">
-      <img src="/images/Arrow.svg" alt="" class="plant-points">
-      <img src="/images/youngTree.svg" alt="" class="plant-points">
-    </div>
-
-
-    <div class="alert alert-danger bg-light card-custom-flex">
-      <img src="/images/25PlantPoints.svg" alt="" class="plant-points">
-      <img src="/images/Arrow.svg" alt="" class="plant-points">
-      <img src="/images/fruitTree.svg" alt="" class="plant-points">
-    </div>
-
-    <a class="redeem-btn-align" href="/profilemodal"><button type="button"
-        class="btn btn-success redeem-btn">Redeem</button></a>
-
+    </form>
   </div>
 
   <%- include('templates/footer') %>

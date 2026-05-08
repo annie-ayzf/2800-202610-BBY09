@@ -93,6 +93,22 @@ a {
     margin-top: 2px;
 }
 
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .card-custom-flex {
+    border: 3px solid #283618;
+    background-color: #dde5b6 !important;
+}
+
+input[type="radio"]:checked + .card-custom-flex:hover {
+    background-color: #dde5b6 !important;
+}
+
+label {
+    width: 80vw;
+}
 /* modifying bootstrap css */
 .alert-danger {
     --bs-alert-border-color: #283618;
