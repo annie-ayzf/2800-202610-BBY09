@@ -7,14 +7,24 @@ const mongodb_password = process.env.MONGODB_PASSWORD;
 
 const atlasURI = `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/`;
 
-const client = new MongoClient(atlasURI);
+const client = new MongoClient(atlasURI, {
+  serverSelectionTimeoutMS: 5000,
+  family: 4,
+});
+
 let db;
 
 async function connectDB() {
   if (!db) {
-    await client.connect();
-    db = client.db(process.env.MONGODB_DATABASE);
-    console.log("✅ Connected to MongoDB");
+    try {
+      await client.connect();
+      db = client.db(process.env.MONGODB_DATABASE);
+      console.log("✅ Connected to MongoDB");
+    } catch (err) {
+      console.error("❌ MongoDB connection failed:", err.message);
+      db = null;
+      throw err;
+    }
   }
   return db;
 }

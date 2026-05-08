@@ -1,17 +1,17 @@
 body {
-    margin: 0;
-    height: 100vh;
-    overflow: hidden;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f1ea;
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f1ea;
 }
 
 .phone-card {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #f9f7f2;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fffefb;
 }
 
 /* main content */
@@ -28,11 +28,11 @@ body {
 
 /* title */
 .title-text {
-    font-size: 32px;
-    margin-bottom: 60px;
-    color: #4d3b2f;
-    font-weight: bold;
-    line-height: 1.4;
+  font-size: 32px;
+  margin-bottom: 60px;
+  color: #4d3b2f;
+  font-weight: bold;
+  line-height: 1.4;
 }
 
 /* start button */
@@ -50,8 +50,8 @@ body {
 
 /* hover effect */
 .start-btn:hover {
-    background-color: #9eb16e;
-    color: white;
+  background-color: #9eb16e;
+  color: white;
 }
 
 
