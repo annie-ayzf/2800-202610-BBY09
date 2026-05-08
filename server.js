@@ -19,9 +19,13 @@ const PORT = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+//Express files in public folder to render css and images
 app.use(express.static(__dirname + "/public"));
 app.use("/js", express.static(path.join(__dirname, "src/js")));
 app.use("/images", express.static(path.join(__dirname, "images")));
+
+//Middleware to handle form data
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/game", (req, res) => {
   res.render("game");
@@ -63,6 +67,7 @@ app.get("/gameincorrect", async (req, res) => {
   }
 });
 
+// Rewards data to be passed to profile page
 const rewards = [
   {
     id: "seed-option",
@@ -96,23 +101,22 @@ const rewards = [
   },
 ];
 
-app.get("/gamecorrect", (req, res) => {
-  res.render("gamecorrect");
-});
-
+//profile page to show selectable rewards
 app.get("/profile", (req, res) => {
   res.render("profile", { rewards });
 });
+
+//profile modal to show the earned rewards
+app.post("/profilemodal", (req, res) => {
+  res.render("profilemodal");
+});
+
 app.get("/gamecorrect", (req, res) => {
   res.render("gamecorrect");
 });
 
 app.get("/gameresult", (req, res) => {
   res.render("gameresult");
-});
-
-app.get("/profilemodal", (req, res) => {
-  res.render("profilemodal");
 });
 
 app.get("/", (req, res) => {
