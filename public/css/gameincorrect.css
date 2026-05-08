@@ -49,6 +49,7 @@ body {
 
 /* Continue button */
 .btn-continue {
+  margin-bottom: 7rem;
   background-color: var(--light-green);
   border-color: var(--light-green);
   color: var(--light-cream);
