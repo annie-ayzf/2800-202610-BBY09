@@ -8,6 +8,7 @@ const app = express();
 //Tells express to use the views folder for ejs
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
+app.use("/js", express.static(path.join(__dirname, "src/js")));
 
 const PORT = process.env.PORT || 3000;
 
@@ -84,19 +85,19 @@ app.get("/gameincorrect", async (req, res) => {
 
 // ];
 
-app.get('/profile', (req, res) => {
-  res.render('profile');
-}); 
-app.get('/gamecorrect', (req, res) => {
-    res.render('gamecorrect');
+app.get("/profile", (req, res) => {
+  res.render("profile");
+});
+app.get("/gamecorrect", (req, res) => {
+  res.render("gamecorrect");
 });
 
 app.get("/gameresult", (req, res) => {
   res.render("gameresult");
 });
 
-app.get('/profilemodal', (req, res) => {
-  res.render('profilemodal');
+app.get("/profilemodal", (req, res) => {
+  res.render("profilemodal");
 });
 
 app.get("/", (req, res) => {
