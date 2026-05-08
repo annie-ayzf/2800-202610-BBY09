@@ -1,4 +1,7 @@
-require("dotenv").config();
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
@@ -82,19 +85,19 @@ app.get("/gameincorrect", async (req, res) => {
 
 // ];
 
-app.get('/profile', (req, res) => {
-  res.render('profile');
-}); 
-app.get('/gamecorrect', (req, res) => {
-    res.render('gamecorrect');
+app.get("/profile", (req, res) => {
+  res.render("profile");
+});
+app.get("/gamecorrect", (req, res) => {
+  res.render("gamecorrect");
 });
 
-app.get('/gameresult', (req, res) => {
-    res.render('gameresult');
+app.get("/gameresult", (req, res) => {
+  res.render("gameresult");
 });
 
-app.get('/profilemodal', (req, res) => {
-  res.render('profilemodal');
+app.get("/profilemodal", (req, res) => {
+  res.render("profilemodal");
 });
 
 app.get("/", (req, res) => {
