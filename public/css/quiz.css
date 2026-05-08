@@ -16,13 +16,14 @@ body {
 
 /* main content */
 .content-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    gap: 30px;
 }
 
 /* title */
@@ -36,13 +37,15 @@ body {
 
 /* start button */
 .start-btn {
-  background-color: #57730e;
-  color: white;
-  border-radius: 12px;
-  padding: 18px 50px;
-  font-size: 22px;
-  border: none;
-  transition: 0.3s;
+    background-color: #57730E;
+    border: 0.5px solid #57730E;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+    color: white;
+    border-radius: 12px;
+    padding: 18px 50px;
+    font-size: 22px;
+    border: none;
+    transition: 0.3s;
 }
 
 /* hover effect */
@@ -50,3 +53,81 @@ body {
   background-color: #9eb16e;
   color: white;
 }
+
+
+/* Mobile-First Base Styles */
+dialog {
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  
+  /* Takes up 90% of the screen on mobile */
+  width: 90%; 
+  max-width: 90%;
+  
+  /* Smooth entry animation */
+  overflow: hidden; 
+  background: #000;
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+/* Close Icon: Larger touch target for mobile */
+.close-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* Video Container: Maintains 16:9 ratio */
+.video-container {
+  position: relative;
+  width: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+}
+
+.video-container video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Desktop Enhancements (Min-width: 768px) */
+@media (min-width: 768px) {
+  dialog {
+    width: 80%;
+    max-width: 800px; /* Fixed maximum width on large screens */
+  }
+
+  .close-icon {
+    top: -15px; /* Pulls button slightly outside for a "pro" look */
+    right: -15px;
+    transition: transform 0.2s ease;
+  }
+
+  .close-icon:hover {
+    transform: scale(1.1);
+  }
+}
+
+#tutorial-btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+

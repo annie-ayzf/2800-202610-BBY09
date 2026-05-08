@@ -3,10 +3,14 @@
   --light-cream: #fffefb;
   --brown: #6b4f32;
   --white: #ffffff;
+  --button-green: #67730e;
 }
 
-body {
-  background-color: var(--light-cream);
+.badge {
+  background-color: red;
+  color: var(--light-cream);
+  font-size: 0.8rem;
+  padding: 0.25em 0.5em;
 }
 
 /* Progress bar */
@@ -40,16 +44,23 @@ body {
 
 /* Description label */
 .desc-label {
-  color: var(--white);
+  text-align: center;
+  color: var(--light-cream);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background-color: #606c38;
+  background-color: var(--light-green);
+}
+
+.cardDescription {
+  text-align: center;
+  border-radius: 0 0 8px 8px;
 }
 
 /* Continue button */
 .btn-continue {
-  background-color: var(--light-green);
+  margin-bottom: 7rem;
+  background-color: var(--button-green);
   border-color: var(--light-green);
   color: var(--light-cream);
   letter-spacing: 0.08em;
