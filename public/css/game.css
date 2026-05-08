@@ -1,0 +1,139 @@
+/* PAGE BACKGROUND */
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f1ea;
+    padding-bottom: 75px;
+}
+
+/* MAIN PAGE CONTAINER */
+.app-container {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #f4f1ea;
+}
+
+/* PHONE STYLE CARD */
+.phone-card {
+    width: 100vw;
+    min-height: 100vh;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f9f7f2;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TOP PROGRESS SECTION */
+.progress-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px;
+}
+
+/* PROGRESS BAR */
+.progress-bar-custom {
+    width: 75%;
+    height: 18px;
+    background-color: #b8c98a;
+    border-radius: 20px;
+}
+
+/* QUESTION NUMBER CIRCLE */
+.question-number {
+    width: 38px;
+    height: 38px;
+    background-color: #8b6b47;
+    color: white;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* QUESTION BOX */
+.question-box {
+    background-color: white;
+    margin: 10px 18px;
+    padding: 20px;
+    border-radius: 12px;
+
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #4d3b2f;
+}
+
+/* IMAGE SECTION */
+.image-area {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* QUIZ IMAGE */
+.quiz-img {
+    width: 85%;
+    max-width: 340px;
+
+    border-radius: 12px;
+    border: 6px solid #d8e4b2;
+}
+
+/* TRUE FALSE BUTTON AREA */
+.tf-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+    padding: 20px;
+
+    margin-bottom: 90px;
+}
+
+/* TRUE FALSE BUTTONS */
+.tf-btn {
+    height: 120px;
+    font-size: 50px;
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bold;
+
+    text-decoration: none;
+    color: white;
+
+    transition: 0.2s;
+}
+
+/* KEEP LINK WHITE */
+.tf-btn:visited {
+    color: white;
+}
+
+/* HOVER EFFECT */
+.tf-btn:hover {
+    transform: scale(1.03);
+    color: white;
+}
+
+/* CLICK EFFECT */
+.tf-btn:active {
+    transform: scale(0.97);
+    color: white;
+}
+
+/* TRUE BUTTON */
+.true-btn {
+    background-color: #8b6b47;
+}
+
+/* FALSE BUTTON */
+.false-btn {
+    background-color: #b8c98a;
+}

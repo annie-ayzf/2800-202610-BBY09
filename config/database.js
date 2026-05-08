@@ -1,14 +1,32 @@
-const http = require("http");
+const { MongoClient } = require("mongodb");
+require("dotenv").config();
 
-const PORT = process.env.PORT || 3000;
+const mongodb_host = process.env.MONGODB_HOST;
+const mongodb_user = process.env.MONGODB_USER;
+const mongodb_password = process.env.MONGODB_PASSWORD;
 
-const requestHandler = (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Hello, world!");
-};
+const atlasURI = `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/`;
 
-const server = http.createServer(requestHandler);
-
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const client = new MongoClient(atlasURI, {
+  serverSelectionTimeoutMS: 5000,
+  family: 4,
 });
+
+let db;
+
+async function connectDB() {
+  if (!db) {
+    try {
+      await client.connect();
+      db = client.db(process.env.MONGODB_DATABASE);
+      console.log("✅ Connected to MongoDB");
+    } catch (err) {
+      console.error("❌ MongoDB connection failed:", err.message);
+      db = null;
+      throw err;
+    }
+  }
+  return db;
+}
+
+module.exports = { connectDB };

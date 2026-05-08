@@ -1,0 +1,69 @@
+<%- include('templates/header') %>
+<div class="min-vh-100 d-flex flex-column px-3 py-4">
+
+  <!-- Progress bar -->
+  <div class="progress mb-3" style="height: 8px;">
+    <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-custom"
+      role="progressbar"
+      style="width: '<%= typeof currentQuestion !== 'undefined' && typeof totalQuestions !== 'undefined' ? (currentQuestion / totalQuestions) * 100 : 60 %>%';">
+    </div>
+  </div>
+
+  <!-- NOT EDIBLE banner -->
+  <div class="alert alert-danger text-center fw-bold fs-5 mb-3 not-edible-banner" role="alert">
+    ☠️ NOT EDIBLE!!
+  </div>
+
+  <!-- Plant card -->
+  <div class="card border-0 shadow-sm mb-3 overflow-hidden">
+    <div class="row g-0">
+
+      <!-- Images -->
+     <div class="col-4 d-flex align-items-center justify-content-center" style="min-height: 120px; background-color: #606C38;">
+        <% if (plant && plant.image) { %>
+          <img
+            src="<%= plant.image %>"
+            alt=""
+            class="img-fluid w-100"
+            style="height: 120px; object-fit: cover;"
+            onerror="this.parentElement.innerHTML='<span style=\'font-size:2.5rem;\'>🌿</span>';">
+          <% } else { %>
+         <span style="font-size: 2.5rem;">🌿</span>
+        <% } %>
+      </div>
+
+      <div class="col-8">
+        <div class="card-bodyIncorrectPlants py-2 px-3">
+          <h6 class="card-title fw-bold mb-1 plant-name"><%= plant.name %></h6>
+          <% if (plant.scientificName) { %>
+            <p class="fst-italic text-muted mb-1" style="font-size:0.77rem;"><%= plant.scientificName %></p>
+          <% } %>
+          <% if (plant.habitat) { %>
+            <p class="text-muted mb-1" style="font-size:0.77rem;">Habitat: <%= plant.habitat %></p>
+          <% } %>
+          <% if (plant.location) { %>
+            <p class="text-muted mb-0" style="font-size:0.77rem;">Location: <%= plant.location %></p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description card -->
+  <div class="cardDescription border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <p class="fw-semibold mb-2 desc-label"> DESCRIPTION</p>
+      <p class="mb-0" style="font-size:0.88rem; line-height:1.65;"><%= plant.description %></p>
+    </div>
+  </div>
+
+  <!-- Spacer to push button to bottom -->
+  <div class="flex-grow-1"></div>
+
+  <!-- Continue button - full width at bottom -->
+  <div class="d-grid">
+    <a href="/game" class="btn btn-lg fw-semibold btn-continue rounded-3">CONTINUE</a>
+  </div>
+
+</div>
+<%- include('templates/footer') %>

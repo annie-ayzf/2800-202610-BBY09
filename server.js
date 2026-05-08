@@ -1,14 +1,147 @@
-const http = require("http");
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+const { connectDB } = require("./config/database");
+const app = express();
+
+//Tells express to use the views folder for ejs
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/views");
+app.use("/js", express.static(path.join(__dirname, "src/js")));
 
 const PORT = process.env.PORT || 3000;
 
-const requestHandler = (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Hello, world!");
-};
+//Express files in views folder to render ejs
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
-const server = http.createServer(requestHandler);
+app.use(express.static(__dirname + "/public"));
+app.use("/js", express.static(path.join(__dirname, "src/js")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
-server.listen(PORT, () => {
+app.get("/game", (req, res) => {
+  res.render("game");
+});
+
+//Middleware to handle images of the plants
+function imageToBase64(filename) {
+  const filePath = path.join(__dirname, "images", filename);
+  if (!fs.existsSync(filePath)) return null;
+  const ext = path.extname(filename).slice(1);
+  const data = fs.readFileSync(filePath);
+  return `data:image/${ext};base64,${data.toString("base64")}`;
+}
+
+/*Temporary - for development purposes only,
+ will be removed or linked when question is wrong*/
+app.get("/gameincorrect", async (req, res) => {
+  try {
+    const db = await connectDB();
+
+    const plants = await db
+      .collection("plants")
+      .aggregate([{ $match: { isEdible: false } }, { $sample: { size: 1 } }])
+      .toArray();
+
+    console.log("Plants found:", plants);
+    console.log("Count:", plants.length);
+
+    if (!plants || plants.length === 0) {
+      return res.send("No plants found in DB");
+    }
+
+    const plant = plants[0];
+    res.render("gameincorrect", { plant });
+  } catch (err) {
+    //error handling
+    console.error("FULL ERROR:", err); // checks your terminal
+    res.status(500).send("Error: " + err.message); // show the actual error
+  }
+});
+
+const rewards = [
+  {
+    id: "seed-option",
+    value: "seed",
+    pointsImg: "5PlantPoints",
+    rewardImg: "Seed",
+  },
+  {
+    id: "sprout-option",
+    value: "sprout",
+    pointsImg: "10PlantPoints",
+    rewardImg: "Sprout",
+  },
+  {
+    id: "seedling-option",
+    value: "seedling",
+    pointsImg: "15PlantPoints",
+    rewardImg: "seedling",
+  },
+  {
+    id: "youngTree-option",
+    value: "youngTree",
+    pointsImg: "20PlantPoints",
+    rewardImg: "youngTree",
+  },
+  {
+    id: "fruitTree-option",
+    value: "fruitTree",
+    pointsImg: "25PlantPoints",
+    rewardImg: "fruitTree",
+  },
+];
+
+app.get("/profile", (req, res) => {
+  res.render("profile");
+});
+app.get("/gamecorrect", (req, res) => {
+  res.render("gamecorrect");
+});
+
+app.get("/profile", (req, res) => {
+  res.render("profile", { rewards });
+});
+app.get("/gamecorrect", (req, res) => {
+  res.render("gamecorrect");
+});
+
+app.get("/gameresult", (req, res) => {
+  res.render("gameresult");
+});
+
+app.get("/profilemodal", (req, res) => {
+  res.render("profilemodal");
+});
+
+app.get("/", (req, res) => {
+  res.render("index");
+});
+
+app.get("/signup", (req, res) => {
+  res.render("signup");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.get("/quiz", (req, res) => {
+  res.render("quiz");
+});
+
+app.get("/info", (req, res) => {
+  res.render("info");
+});
+
+app.get("/", (req, res) => {
+  res.render("quiz");
+});
+
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

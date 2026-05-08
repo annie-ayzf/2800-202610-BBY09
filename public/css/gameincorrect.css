@@ -1,0 +1,66 @@
+:root {
+  --light-green: #adc178;
+  --light-cream: #fffefb;
+  --brown: #6b4f32;
+  --white: #ffffff;
+}
+
+body {
+  background-color: var(--light-cream);
+}
+
+/* Progress bar */
+.progress-bar-custom {
+  background-color: red;
+}
+
+/* NOT EDIBLE banner */
+.not-edible-banner {
+  background-color: rgba(220, 53, 69, 0.12);
+  border: 1.5px solid rgba(220, 53, 69, 0.35);
+  color: #842029;
+}
+
+/* Plant card */
+.plant-emoji-placeholder {
+  width: 110px;
+  height: 110px;
+  background-color: var(--light-green);
+  color: var(--light-cream);
+  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.plant-name {
+  color: var(--white);
+}
+
+/* Description label */
+.desc-label {
+  color: var(--white);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background-color: #606c38;
+}
+
+/* Continue button */
+.btn-continue {
+  background-color: var(--light-green);
+  border-color: var(--light-green);
+  color: var(--light-cream);
+  letter-spacing: 0.08em;
+}
+.btn-continue:hover {
+  background-color: var(--brown);
+  border-color: var(--brown);
+  color: var(--light-cream);
+}
+
+.card-bodyIncorrectPlants {
+  background-color: var(--light-green);
+  border-radius: 0 0 8px 8px;
+}

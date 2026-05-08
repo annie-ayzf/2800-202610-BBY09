@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f1ea;
+}
+
+.phone-card {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fffefb;
+}
+
+/* main content */
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+/* title */
+.title-text {
+  font-size: 32px;
+  margin-bottom: 60px;
+  color: #4d3b2f;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+/* start button */
+.start-btn {
+  background-color: #57730e;
+  color: white;
+  border-radius: 12px;
+  padding: 18px 50px;
+  font-size: 22px;
+  border: none;
+  transition: 0.3s;
+}
+
+/* hover effect */
+.start-btn:hover {
+  background-color: #9eb16e;
+  color: white;
+}

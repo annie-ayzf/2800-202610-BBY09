@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Document</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Profile CSS -->
+  <link rel="stylesheet" href="/css/profile.css">
+</head>
+
+<body>
+
+  <div class="d-flex p-2 heading-styling">
+    <h2 class="heading-element">
+      Hello User!
+    </h2>
+    <div class="earned-points">
+      <img src="/images/plant_points.svg" alt="plant-points-logo" class="img-earned-points">
+      <p class="text-earned-points"> Earned Points</p>
+      <p class="text-earned-points"> 25 </p>
+      <img src="/images/pp.svg" alt="plant-points" class="plant-points-logo">
+    </div>
+  </div>
+
+  <div class="container ">
+    <form action="/profilemodal" method="POST" class="container-custom-flex">
+
+      <% for(let reward of rewards) { %>
+        <label for="<%= reward.id %>-option">
+          <input type="radio" id="<%= reward.id %>-option" value="<%= reward.value %>" name="reward">
+          <div class="alert alert-danger bg-light card-custom-flex">
+            <img src="/images/<%= reward.pointsImg %>.svg" alt="" class="plant-points">
+            <img src="/images/Arrow.svg" alt="" class="plant-points">
+            <img src="/images/<%= reward.rewardImg %>.svg" alt="" class="plant-points">
+          </div>
+        </label>
+
+        <% } %>
+
+          <button type="submit" class="btn btn-success redeem-btn">Redeem</button>
+
+    </form>
+  </div>
+
+  <%- include('templates/footer') %>
+
+</body>
+
+</html>

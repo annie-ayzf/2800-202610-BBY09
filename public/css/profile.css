@@ -1,0 +1,127 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #FFFEFB;
+}
+
+a {
+    text-decoration: none;
+}
+
+.heading-styling {
+    background-color: #ADC178;
+    height: 30vh;
+    margin-bottom: 2rem;
+    justify-content: center;
+    color: #000000;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.heading-element {
+    align-self: center;
+}
+
+.card-custom-flex {
+    display: flex !important;
+    justify-content: space-around !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+}
+
+.container-custom-flex {
+    display: flex;
+    flex-direction: column;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.card-custom-flex:hover {
+    background-color: #b0a34b !important;
+}
+
+.redeem-btn {
+    width: 30%;
+    height: 50px;
+    align-self: center;
+    background-color: #57730E;
+    margin-top: 2rem;
+    transition: transform 0.3s ease;
+}
+
+.redeem-btn:hover {
+    transform: scale(1.15);
+}
+
+.redeem-btn-align {
+    display: inline-flex;
+    justify-content: center;
+}
+
+.earned-points {
+    align-self: center;
+    display: flex;
+    justify-content: space-between;
+    width: 70vw;
+    background-color: #FFFEFB;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.text-earned-points {
+    align-self: center;
+    text-align: center;
+    margin-bottom: 0;
+    color: black;
+}
+
+.plant-points-logo {
+    width: 25px;
+    height: 25px;
+    margin-top: 2px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .card-custom-flex {
+    border: 3px solid #283618;
+    background-color: #dde5b6 !important;
+}
+
+input[type="radio"]:checked + .card-custom-flex:hover {
+    background-color: #dde5b6 !important;
+}
+
+label {
+    width: 80vw;
+}
+/* modifying bootstrap css */
+.alert-danger {
+    --bs-alert-border-color: #283618;
+}
+
+.btn-success {
+    --bs-btn-border-color: none !important;
+    --bs-btn-hover-bg: #57730E;
+    --bs-btn-hover-border-color: #57730E;
+    --bs-btn-active-bg: #57730E;
+}
+
+.bg-light {
+    background-color: #FFFEFB !important;
+    border-color: #dda15e;
+}

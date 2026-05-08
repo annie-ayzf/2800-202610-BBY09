@@ -1,0 +1,43 @@
+body {
+  background-color: #fffefb;
+  color: #6b4f32;
+}
+
+/* Main page container */
+.hero-section {
+  background-color: #fffefb;
+}
+
+/* Small intro text */
+.hero-text {
+  color: #6b4f32;
+}
+
+/* NibbleWise title */
+.hero-title {
+  color: #6b4f32;
+}
+
+/* Sign Up button */
+.signup-btn {
+  background-color: #57730e;
+  color: #FFFEFB;
+  border: none;
+}
+
+.signup-btn:hover {
+  background-color: #4a620c;
+  color: #fffefb;
+}
+
+/* Login button */
+.login-btn {
+  background-color: #fffefb;
+  color: #6b4f32;
+  border: 2px solid #6b4f32;
+}
+
+.login-btn:hover {
+  background-color: #6b4f32;
+  color: #fffefb;
+}
