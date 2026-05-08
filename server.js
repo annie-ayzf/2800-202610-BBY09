@@ -59,33 +59,40 @@ app.get("/gameincorrect", async (req, res) => {
   }
 });
 
-// const profileModalItems = [{
-//   rewardImgName = "seedColor",
-//   rewardName = "Seed"
-// },
-// {
-//   rewardImgName = "SproutColor1",
-//   rewardName = "Sprout"
-// },
-// {
-//   rewardImgName = "SeedlingColor",
-//   rewardName = "Seedling"
-// },
-
-// {
-//   rewardImgName = "youngTreeColor",
-//   rewardName = "Young Tree"
-// },
-
-// {
-//   rewardImgName = "fruitTreeColor_1",
-//   rewardName = "Fruit Tree"
-// },
-
-// ];
+const rewards =[{
+    id: "seed-option",
+    value: "seed",
+    pointsImg: "5PlantPoints",
+    rewardImg:"Seed"
+},
+{
+    id: "sprout-option",
+    value: "sprout",
+    pointsImg: "10PlantPoints",
+    rewardImg:"Sprout"
+},
+{
+    id: "seedling-option",
+    value: "seedling",
+    pointsImg: "15PlantPoints",
+    rewardImg:"seedling"
+},
+{
+    id: "youngTree-option",
+    value: "youngTree",
+    pointsImg: "20PlantPoints",
+    rewardImg:"youngTree"
+},
+{
+    id: "fruitTree-option",
+    value: "fruitTree",
+    pointsImg: "25PlantPoints",
+    rewardImg:"fruitTree"
+}
+];
 
 app.get('/profile', (req, res) => {
-  res.render('profile');
+  res.render('profile',{rewards});
 }); 
 app.get('/gamecorrect', (req, res) => {
     res.render('gamecorrect');
