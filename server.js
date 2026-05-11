@@ -85,10 +85,6 @@ app.use("/", authRoutes);
 //Middleware to handle form data
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/game", (req, res) => {
-  res.render("game");
-});
-
 //Middleware to handle images of the plants
 function imageToBase64(filename) {
   const filePath = path.join(__dirname, "images", filename);
@@ -123,6 +119,88 @@ app.get("/gameincorrect", async (req, res) => {
     console.error("FULL ERROR:", err); // checks your terminal
     res.status(500).send("Error: " + err.message); // show the actual error
   }
+});
+
+app.get("/game", async (req, res) => {
+
+  const db = await connectDB();
+
+  // first time quiz starts
+  if (!req.session.questions) {
+
+    const questions = await db.collection("plants").aggregate([{ $sample: { size: 5 } }]).toArray();
+
+    req.session.questions = questions;
+
+    req.session.questionNumber = 0;
+
+    req.session.score = 0;
+  }
+
+  // finished all questions
+  if (req.session.questionNumber >= 5) {
+
+    res.redirect("/gameresult");
+
+    return;
+  }
+
+  const plant = req.session.questions[req.session.questionNumber];
+
+  res.render("game", {
+    plant,
+    questionNumber:
+      req.session.questionNumber + 1
+  });
+});
+
+app.post("/answer", (req, res) => {
+
+  const plant =
+    req.session.questions[req.session.questionNumber];
+
+  const userAnswer = req.body.answer;
+
+  const correctAnswer =
+    plant.isEdible ? "T" : "F";
+
+  // correct answer
+  if (userAnswer === correctAnswer) {
+
+    req.session.score++;
+
+    req.session.questionNumber++;
+
+    res.redirect("/game");
+
+    return;
+  }
+
+  // wrong answer
+  req.session.questionNumber++;
+
+  res.redirect("/gameincorrect");
+});
+
+app.get("/nextquestion", (req, res) => {
+
+  res.redirect("/game");
+});
+
+app.get("/gameresult", (req, res) => {
+
+  res.render("gameresult", {
+    score: req.session.score,
+    total: 5
+  });
+});
+
+app.get("/restartquiz", (req, res) => {
+  req.session.questions = null;
+  req.session.questionNumber = 0;
+  req.session.score = 0;
+
+  res.redirect("/game");
 });
 
 // Rewards data to be passed to profile page
@@ -174,7 +252,11 @@ app.get("/gamecorrect", (req, res) => {
 });
 
 app.get("/gameresult", (req, res) => {
-  res.render("gameresult");
+
+  res.render("gameresult", {
+    score: req.session.score,
+    total: 5
+  });
 });
 
 app.get("/profilemodal", (req, res) => {
