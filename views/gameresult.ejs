@@ -21,7 +21,9 @@
 
             <h1 class="result-title">NICE WORK!</h1>
 
-            <p class="score-text">You got 1 out of 2 right!</p>
+            <p class="score-text">
+                You got <%= score %> out of <%= total %> right!
+            </p>
 
             <div class="progress-pill">
                 <div class="progress-fill"></div>
@@ -29,23 +31,23 @@
 
             <div class="points-box">
                 <p>TOTAL POINTS:</p>
-                <h2>1</h2>
+                <h2><%= score %></h2>
             </div>
 
             <div class="stats-area">
                 <div class="stat-box">
-                    <h3>1</h3>
+                    <h3><%= score %></h3>
                     <p>Correct</p>
                 </div>
 
                 <div class="stat-box">
-                    <h3>1</h3>
+                    <h3><%= total - score %></h3>
                     <p>Missed</p>
                 </div>
             </div>
 
             <div class="button-area">
-                <a href="/game" class="result-btn">Play again?</a>
+                <a href="/restartquiz" class="result-btn">Play again?</a>
                 <a href="/quiz" class="result-btn">Home</a>
             </div>
 

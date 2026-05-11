@@ -138,3 +138,7 @@ body {
 .false-btn {
     background-color: #5EBACF;
 }
+
+.answer-clicked {
+    transform: scale(1.08);
+}
