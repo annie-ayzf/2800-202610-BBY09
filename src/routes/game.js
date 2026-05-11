@@ -7,6 +7,17 @@ const requestHandler = (req, res) => {
   res.end("Hello, world!");
 };
 
+const buttons = document.querySelectorAll(".tf-btn");
+
+for (let i = 0; i < buttons.length; i++) {
+
+    buttons[i].addEventListener("click", function () {
+
+        buttons[i].classList.add("answer-clicked");
+
+    });
+}
+
 const server = http.createServer(requestHandler);
 
 server.listen(PORT, () => {
