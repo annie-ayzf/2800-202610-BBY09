@@ -8,6 +8,7 @@ const MongoStore = require('connect-mongo').default;
 const session = require("express-session");
 
 const express = require("express");
+const router = express.Router();
 const path = require("path");
 const fs = require("fs");
 const { connectDB } = require("./config/database");
@@ -81,6 +82,16 @@ app.use(session({
 
 /* MIDDLE WEAR */
 
+const gameRoutes = require("./src/routes/game");
+
+app.use("/", gameRoutes);
+
+router.get("/game", (req, res) => {
+    res.render("game");
+});
+
+module.exports = router;
+
 //linking signup-login.js
 const authRoutes = require("./src/routes/signup-login");
 app.use("/", authRoutes);
@@ -97,101 +108,6 @@ function imageToBase64(filename) {
 }
 
 /* ROUTES */
-
-/* If a user were to get the game incorrect */
-app.get("/gameincorrect", (req, res) => {
-  const plant = req.session.wrongPlant;
-
-  if (!plant) {
-    return res.redirect("/game");
-  }
-
-  const questionNumber = req.session.questionNumber;
-
-  res.render("gameincorrect", {
-    plant,
-    questionNumber: req.session.questionNumber
-  });
-});
-
-/* Game Functionality */
-app.get("/game", async (req, res) => {
-
-  const db = await connectDB();
-
-  // first time quiz starts
-  if (!req.session.questions) {
-
-    const questions = await db.collection("plants").aggregate([{ $sample: { size: 5 } }]).toArray();
-
-    req.session.questions = questions;
-
-    req.session.questionNumber = 0;
-
-    req.session.score = 0;
-  }
-
-  // finished all questions
-  if (req.session.questionNumber >= 5) {
-
-    res.redirect("/gameresult");
-
-    return;
-  }
-
-  const plant = req.session.questions[req.session.questionNumber];
-
-  res.render("game", {
-    plant,
-    questionNumber:
-      req.session.questionNumber + 1
-  });
-});
-
-/* If a user were to get an answer correct */
-app.post("/answer", (req, res) => {
-  const plant = req.session.questions[req.session.questionNumber];
-  const userAnswer = req.body.answer;
-  const correctAnswer = plant.isEdible ? "T" : "F";
-
-  // correct answer
-  if (userAnswer === correctAnswer) {
-    req.session.score++;
-    req.session.questionNumber++;
-    res.redirect("/game");
-    return;
-  }
-
-  // wrong answer - save the plant they got wrong 
-  req.session.wrongPlant = plant;
-  req.session.questionNumber++;
-    req.session.save(() => {        // force session to save before redirect
-    res.redirect("/gameincorrect");
-  });
-});
-
-app.get("/nextquestion", (req, res) => {
-
-  res.redirect("/game");
-});
-
-/*Game Results */
-app.get("/gameresult", (req, res) => {
-
-  res.render("gameresult", {
-    score: req.session.score,
-    total: 5
-  });
-});
-
-/* Restarts Quiz */
-app.get("/restartquiz", (req, res) => {
-  req.session.questions = null;
-  req.session.questionNumber = 0;
-  req.session.score = 0;
-
-  res.redirect("/game");
-});
 
 // Rewards data to be passed to profile page
 const rewards = [
@@ -235,18 +151,6 @@ app.get("/profile", (req, res) => {
 //profile modal to show the earned rewards
 app.post("/profilemodal", (req, res) => {
   res.render("profilemodal");
-});
-
-app.get("/gamecorrect", (req, res) => {
-  res.render("gamecorrect");
-});
-
-app.get("/gameresult", (req, res) => {
-
-  res.render("gameresult", {
-    score: req.session.score,
-    total: 5
-  });
 });
 
 app.get("/profilemodal", (req, res) => {
