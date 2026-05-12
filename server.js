@@ -1,11 +1,11 @@
+/* DNS */
 const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-require('dotenv').config();
+/* Constants */
 const MongoStore = require('connect-mongo').default;
 const session = require("express-session");
-
 
 const express = require("express");
 const path = require("path");
@@ -79,6 +79,8 @@ app.use(session({
 }
 ));
 
+/* MIDDLE WEAR */
+
 //linking signup-login.js
 const authRoutes = require("./src/routes/signup-login");
 app.use("/", authRoutes);
@@ -94,43 +96,25 @@ function imageToBase64(filename) {
   return `data:image/${ext};base64,${data.toString("base64")}`;
 }
 
-/*Temporary - for development purposes only,
- will be removed or linked when question is wrong*/
-app.get("/gameincorrect", async (req, res) => {
-  try {
-    const db = await connectDB();
+/* ROUTES */
 
-    const plants = await db
-      .collection("plants")
-      .aggregate([{ $match: { isEdible: false } }, { $sample: { size: 1 } }])
-      .toArray();
+/* If a user were to get the game incorrect */
+app.get("/gameincorrect", (req, res) => {
+  const plant = req.session.wrongPlant;
 
-    console.log("Plants found:", plants);
-    console.log("Count:", plants.length);
-
-    if (!plants || plants.length === 0) {
-      return res.send("No plants found in DB");
-    }
-
-    const plant = plants[0];
-
-    // sends updated quiz number to incorrect page
-    const questionNumber = req.session.questionNumber;
-
-    res.render("gameincorrect", {
-      plant,
-
-      // displays current question number in EJS
-      questionNumber
-    });
-
-  } catch (err) {
-    //error handling
-    console.error("FULL ERROR:", err); // checks your terminal
-    res.status(500).send("Error: " + err.message); // show the actual error
+  if (!plant) {
+    return res.redirect("/game");
   }
+
+  const questionNumber = req.session.questionNumber;
+
+  res.render("gameincorrect", {
+    plant,
+    questionNumber: req.session.questionNumber
+  });
 });
 
+/* Game Functionality */
 app.get("/game", async (req, res) => {
 
   const db = await connectDB();
@@ -164,32 +148,26 @@ app.get("/game", async (req, res) => {
   });
 });
 
+/* If a user were to get an answer correct */
 app.post("/answer", (req, res) => {
-
-  const plant =
-    req.session.questions[req.session.questionNumber];
-
+  const plant = req.session.questions[req.session.questionNumber];
   const userAnswer = req.body.answer;
-
-  const correctAnswer =
-    plant.isEdible ? "T" : "F";
+  const correctAnswer = plant.isEdible ? "T" : "F";
 
   // correct answer
   if (userAnswer === correctAnswer) {
-
     req.session.score++;
-
     req.session.questionNumber++;
-
     res.redirect("/game");
-
     return;
   }
 
-  // wrong answer
+  // wrong answer - save the plant they got wrong 
+  req.session.wrongPlant = plant;
   req.session.questionNumber++;
-
-  res.redirect("/gameincorrect");
+    req.session.save(() => {        // force session to save before redirect
+    res.redirect("/gameincorrect");
+  });
 });
 
 app.get("/nextquestion", (req, res) => {
@@ -197,6 +175,7 @@ app.get("/nextquestion", (req, res) => {
   res.redirect("/game");
 });
 
+/*Game Results */
 app.get("/gameresult", (req, res) => {
 
   res.render("gameresult", {
@@ -205,6 +184,7 @@ app.get("/gameresult", (req, res) => {
   });
 });
 
+/* Restarts Quiz */
 app.get("/restartquiz", (req, res) => {
   req.session.questions = null;
   req.session.questionNumber = 0;
