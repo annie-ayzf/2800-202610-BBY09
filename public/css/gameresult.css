@@ -1,127 +1,23 @@
-/* PAGE BACKGROUND */
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f1ea;
-    padding-bottom: 75px;
+:root {
+  --light-green: #adc178;
+  --light-cream: #fffefb;
+  --brown: #6b4f32;
+  --white: #ffffff;
+  --button-green: #67730e;
+  --score: #d4aa5a;
 }
 
-/* MAIN PAGE */
-.result-page {
-    min-height: 100vh;
-    background-color: #f4f1ea;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-/* RESULT CARD */
-.result-card {
-    width: 100%;
-    max-width: 420px;
-    background-color: #f9f7f2;
-    border-radius: 16px;
-    padding: 25px;
+.alert {
     text-align: center;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
 }
 
-/* TITLE */
-.result-title {
-    font-size: 30px;
-    color: #4d3b2f;
-    margin-bottom: 20px;
+.card-header {
+    background-color: var(--light-green);
+    color: var(--light-cream);
+}
+
+.card-text {
+    font-size: 2rem;
     font-weight: bold;
+    color: #d4aa5a;
 }
-
-/* SCORE TEXT */
-.score-text {
-    color: #4d3b2f;
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-
-/* PROGRESS BAR */
-.progress-pill {
-    width: 80%;
-    height: 24px;
-    background-color: #d8e4b2;
-    border-radius: 20px;
-    margin: 0 auto 20px auto;
-    overflow: hidden;
-}
-
-.progress-fill {
-    width: 50%;
-    height: 100%;
-    background-color: #8b6b47;
-}
-
-/* TOTAL POINTS BOX */
-.points-box {
-    background-color: #d8e4b2;
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 20px;
-    color: #4d3b2f;
-}
-
-.points-box p {
-    margin: 0;
-    font-size: 18px;
-}
-
-.points-box h2 {
-    margin: 10px 0 0 0;
-    font-size: 28px;
-}
-
-/* CORRECT AND MISSED AREA */
-.stats-area {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 22px;
-}
-
-.stat-box {
-    flex: 1;
-    background-color: white;
-    border: 2px solid #b8c98a;
-    border-radius: 14px;
-    padding: 15px;
-    color: #4d3b2f;
-}
-
-.stat-box h3 {
-    margin: 0;
-    font-size: 26px;
-}
-
-.stat-box p {
-    margin: 5px 0 0 0;
-}
-
-/* BUTTON AREA */
-.button-area {
-    display: flex;
-    gap: 12px;
-}
-
-/* BUTTONS */
-.result-btn {
-    flex: 1;
-    background-color: #8b6b47;
-    color: white;
-    text-decoration: none;
-    padding: 14px;
-    border-radius: 10px;
-    font-size: 18px;
-    transition: 0.2s;
-}
-
-.result-btn:hover {
-    transform: scale(0.95);
-    color: white;
-}
-

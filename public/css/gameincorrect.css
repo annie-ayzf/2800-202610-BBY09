@@ -15,11 +15,6 @@
   padding: 0.25em 0.5em;
 }
 
-/* Progress bar */
-.progress-bar-custom {
-  background-color: red;
-}
-
 /* NOT EDIBLE banner */
 .not-edible-banner {
   background-color: rgba(220, 53, 69, 0.12);
