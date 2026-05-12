@@ -60,22 +60,22 @@ app.use(
 
 //create a mongoDB place to store session data
 var mongoStore = MongoStore.create({
-    mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_session_database}`,
-    crypto: {
-        secret: mongodb_session_secret
-    },
-    ttl: 365 * 24 * 60 * 60
+  mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_session_database}`,
+  crypto: {
+    secret: mongodb_session_secret
+  },
+  ttl: 365 * 24 * 60 * 60
 });
 
 //turns on session. what allows login to be remembered
 app.use(session({
-    secret: node_session_secret,
-    store: mongoStore,
-    saveUninitialized: false,
-    resave: false,
-    cookie: {
-        maxAge: expireTime
-    }
+  secret: node_session_secret,
+  store: mongoStore,
+  saveUninitialized: false,
+  resave: false,
+  cookie: {
+    maxAge: expireTime
+  }
 }
 ));
 
@@ -165,7 +165,7 @@ app.post("/answer", (req, res) => {
   // wrong answer - save the plant they got wrong 
   req.session.wrongPlant = plant;
   req.session.questionNumber++;
-    req.session.save(() => {        // force session to save before redirect
+  req.session.save(() => {        // force session to save before redirect
     res.redirect("/gameincorrect");
   });
 });
@@ -200,30 +200,40 @@ const rewards = [
     value: "seed",
     pointsImg: "5PlantPoints",
     rewardImg: "Seed",
+    rewardImgModal: "seedColor.svg",
+    rewardName: "Seed!"
   },
   {
     id: "sprout-option",
     value: "sprout",
     pointsImg: "10PlantPoints",
     rewardImg: "Sprout",
+    rewardImgModal: "SproutColor1.svg",
+    rewardName: "Sprout!"
   },
   {
     id: "seedling-option",
     value: "seedling",
     pointsImg: "15PlantPoints",
     rewardImg: "seedling",
+    rewardImgModal: "SeedlingColor.svg",
+    rewardName: "Seedling!"
   },
   {
     id: "youngTree-option",
     value: "youngTree",
     pointsImg: "20PlantPoints",
     rewardImg: "youngTree",
+    rewardImgModal: "youngTreeColor.svg",
+    rewardName: "Young Tree!"
   },
   {
     id: "fruitTree-option",
     value: "fruitTree",
     pointsImg: "25PlantPoints",
     rewardImg: "fruitTree",
+    rewardImgModal: "fruitTreeColor_1.svg",
+    rewardName: "Fruit Tree!"
   },
 ];
 
@@ -232,9 +242,11 @@ app.get("/profile", (req, res) => {
   res.render("profile", { rewards });
 });
 
+
+
 //profile modal to show the earned rewards
 app.post("/profilemodal", (req, res) => {
-  res.render("profilemodal");
+  res.render("profilemodal", { rewards });
 });
 
 app.get("/gamecorrect", (req, res) => {
@@ -247,10 +259,6 @@ app.get("/gameresult", (req, res) => {
     score: req.session.score,
     total: 5
   });
-});
-
-app.get("/profilemodal", (req, res) => {
-  res.render("profilemodal");
 });
 
 //if theres a session go to quiz.ejs
