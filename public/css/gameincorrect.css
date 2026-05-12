@@ -5,7 +5,9 @@
   --white: #ffffff;
   --button-green: #67730e;
 }
-
+.body {
+  background-color: var(--light-cream);
+}
 .badge {
   background-color: red;
   color: var(--light-cream);
