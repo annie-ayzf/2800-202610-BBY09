@@ -21,3 +21,8 @@
     font-weight: bold;
     color: #d4aa5a;
 }
+
+.btn {
+    background-color: var(--button-green);
+    color: var(--light-cream);
+}
