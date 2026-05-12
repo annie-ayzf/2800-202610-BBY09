@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <title>Quiz Question 2</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/gamecorrect.css">
-</head>
-
-<body>
-
+<%- include('templates/header', { pageTitle: 'Quiz', css: ['gamecorrect.css'] })  %>
     <div class="app-container">
 
         <div class="phone-card">
@@ -40,12 +24,7 @@
 
             </div>
 
-            <%- include('templates/footer') %>
-
         </div>
 
     </div>
-
-</body>
-
-</html>
+<%- include('templates/footer', { js: ['gamecorrect.js'] }) %>
