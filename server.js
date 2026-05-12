@@ -113,7 +113,17 @@ app.get("/gameincorrect", async (req, res) => {
     }
 
     const plant = plants[0];
-    res.render("gameincorrect", { plant });
+
+    // sends updated quiz number to incorrect page
+    const questionNumber = req.session.questionNumber;
+
+    res.render("gameincorrect", {
+      plant,
+
+      // displays current question number in EJS
+      questionNumber
+    });
+
   } catch (err) {
     //error handling
     console.error("FULL ERROR:", err); // checks your terminal
