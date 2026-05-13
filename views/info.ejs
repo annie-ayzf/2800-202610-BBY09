@@ -24,28 +24,38 @@
     </nav>
 
     <!-- Info Cards -->
-    <div class="container d-flex justify-content-center flex-wrap gap-4 mt-5">
-      <div class="card" style="width: 18rem">
+    <div class="container d-flex justify-content-center flex-wrap gap-4 mt-5 info-card-container">
+    <% plants.forEach(function(plant) { %> <!-- for every plant in db make one card-->
+        <div class="card" style="width: 18rem">
         <img
-          src="/images/quiz1Image.jpg"
-          class="card-img-top"
-          alt="Salal Plant"
+            src="<%= plant.image %>"
+            class="card-img-top"
+            alt="<%= plant.name %>"
         />
+
         <div class="card-body">
-          <h5 class="card-title">Salal</h5>
-          <p class="card-text">
-            Evergreen shrub with dark berries traditionally eaten by Indigenous
-            peoples.
-          </p>
+            <h5 class="card-title"><%= plant.name %></h5>
+
+            <p class="card-text">
+            <%= plant.description %>
+            </p>
         </div>
 
         <ul class="list-group list-group-flush">
-          <li class="list-group-item"><b>Edible:</b> True</li>
-          <li class="list-group-item">
-            <b>Location:</b> Vancouver, BC, Canada
-          </li>
-          <li class="list-group-item"><b>Habitat:</b> Coastal forests</li>
+            <li class="list-group-item">
+            <b>Edible:</b> <%= plant.isEdible ? "True" : "False" %>
+            </li>
+
+            <li class="list-group-item">
+            <b>Location:</b> <%= plant.location %>
+            </li>
+
+            <li class="list-group-item">
+            <b>Habitat:</b> <%= plant.habitat %>
+            </li>
         </ul>
-      </div>
+        </div>
+    <% }) %>
     </div>
+
 <%- include('templates/footer', { js: ['info.js'] }) %>

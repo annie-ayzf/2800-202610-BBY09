@@ -14,13 +14,18 @@ const fs = require("fs");
 const { connectDB } = require("./config/database");
 const app = express();
 
+const authRoutes = require("./src/routes/signup-login");
+
+const OpenAI = require("openai");
+const { generatePlantDescription } = require("./src/routes/plantDescriptionAI");
+
 //Express files in views folder to render ejs
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 //Express files in public folder to render css and images
 app.use(express.static(__dirname + "/public"));
-app.use("/js", express.static(path.join(__dirname, "src/js")));
+app.use("/js", express.static(path.join(__dirname, "src/routes")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 const mongoSanitize = require('express-mongo-sanitize');
@@ -37,6 +42,10 @@ const mongodb_session_database = process.env.MONGODB_SESSION_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 
 const node_session_secret = process.env.NODE_SESSION_SECRET;
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -93,8 +102,8 @@ router.get("/game", (req, res) => {
 module.exports = router;
 
 //linking signup-login.js
-const authRoutes = require("./src/routes/signup-login");
 app.use("/", authRoutes);
+
 //Middleware to handle form data
 app.use(express.urlencoded({ extended: true }));
 
@@ -179,8 +188,34 @@ app.get("/quiz", (req, res) => {
   res.render("quiz");
 });
 
-app.get("/info", (req, res) => {
-  res.render("info");
+app.get("/info", async (req, res) => {
+  const db = await connectDB();
+  const plantCollection = db.collection("plants");
+
+  let plants = await plantCollection.find().toArray();
+
+  for (let plant of plants) {
+    if (!plant.description || plant.description.trim() === "") {
+      try {
+        const description = await generatePlantDescription(plant);
+
+        await plantCollection.updateOne(
+          { _id: plant._id},
+          { $set: {description: description} }
+        );
+
+      plant.description = description;
+
+      } catch (error) {
+        console.log("Ai descirption failed:", error.message);
+
+        plant.description = "description coming soon."
+      }
+      
+    }
+  }
+
+  res.render("info", {plants});
 });
 
 app.listen(PORT, () => {
