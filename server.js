@@ -233,7 +233,7 @@ const rewards = [
     pointsImg: "25PlantPoints",
     rewardImg: "fruitTree",
     rewardImgModal: "fruitTreeColor_1.svg",
-    rewardName: "Fruit Tree!"
+    rewardName: "Fruit Tree"
   },
 ];
 
@@ -242,12 +242,17 @@ app.get("/profile", (req, res) => {
   res.render("profile", { rewards });
 });
 
-
-
 //profile modal to show the earned rewards
 app.post("/profilemodal", (req, res) => {
-  res.render("profilemodal", { rewards });
+  let selectedOption = req.body.reward;
+  console.log(selectedOption);
+  res.send("hello request received");
+  // res.render("profilemodal", { rewardImgModal: "fruitTreeColor_1.svg", rewardName: "Fruit Tree"  });
 });
+
+app.get('/rewardRedemption', (req, res) => {
+  return res.render('tmp', {imgSrc});
+})
 
 app.get("/gamecorrect", (req, res) => {
   res.render("gamecorrect");
