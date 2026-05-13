@@ -1,3 +1,11 @@
+body {
+  overflow-y: auto;
+}
+
+.info-card-container {
+  padding-bottom: 120px;
+}
+
 .search-input {
   border-color: #6B4F32;
 }
