@@ -6,9 +6,11 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 /* Constants */
 const MongoStore = require('connect-mongo').default;
 const session = require("express-session");
-
 const express = require("express");
+
+//Connects game routes from game.js
 const router = express.Router();
+
 const path = require("path");
 const fs = require("fs");
 const { connectDB } = require("./config/database");
@@ -82,14 +84,12 @@ app.use(session({
 
 /* MIDDLE WEAR */
 
+//acess to game.ejs routes 
 const gameRoutes = require("./src/routes/game");
-
 app.use("/", gameRoutes);
-
 router.get("/game", (req, res) => {
     res.render("game");
 });
-
 module.exports = router;
 
 //linking signup-login.js
