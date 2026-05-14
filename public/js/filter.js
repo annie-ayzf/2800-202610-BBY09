@@ -1,96 +1,281 @@
-// filter.js — all filter logic for the info page
-
 document.addEventListener("DOMContentLoaded", () => {
+
   const filterBtn = document.querySelector(".filter-button");
   const filterPanel = document.getElementById("filter-panel");
-  const searchInput = document.querySelector(".search-input");
-  const cards = () => document.querySelectorAll(".plant-card");
 
-  // ── Toggle filter panel ──────────────────────────────────────
+  const searchInput = document.querySelector(".search-input");
+
+  const edibleBtn = document.getElementById("pill-edible");
+  const nonEdibleBtn = document.getElementById("pill-non-edible");
+  const favouritesBtn = document.getElementById("pill-favourites");
+
+  const clearBtn = document.getElementById("clear-filters");
+
+  let edibleFilter = "all";
+  let favouritesOnly = false;
+
+  function getCards() {
+    return document.querySelectorAll(".plant-card");
+  }
+
+  /*
+  =========================================
+  Toggle filter dropdown
+  =========================================
+  */
+
   filterBtn.addEventListener("click", () => {
     filterPanel.classList.toggle("d-none");
   });
 
-  // ── Save / Favourite icon click ──────────────────────────────
-  document.querySelectorAll(".save-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const plantId = btn.dataset.id;
-      const isFav = btn.dataset.favourite === "true";
+  /*
+  =========================================
+  Main filter logic
+  =========================================
+  */
 
-      try {
-        const res = await fetch("/info/favourite", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: plantId, favourite: !isFav }),
-        });
-
-        if (res.ok) {
-          // Flip state locally without a page reload
-          btn.dataset.favourite = String(!isFav);
-          btn.classList.toggle("saved", !isFav);
-          btn.title = !isFav ? "Remove from favourites" : "Save to favourites";
-
-          // Show/hide the Favourites filter option
-          syncFavouriteFilterOption();
-        }
-      } catch (err) {
-        console.error("Failed to update favourite:", err);
-      }
-    });
-  });
-
-  // ── Show "Favourites" filter chip only when ≥1 plant is saved ─
-  function syncFavouriteFilterOption() {
-    const hasFav = [...document.querySelectorAll(".save-btn")].some(
-      (b) => b.dataset.favourite === "true"
-    );
-    const favOption = document.getElementById("filter-favourites-wrap");
-    if (favOption) favOption.classList.toggle("d-none", !hasFav);
-  }
-
-  // Run on load in case the page already has favourites
-  syncFavouriteFilterOption();
-
-  // ── Apply filters ────────────────────────────────────────────
   function applyFilters() {
-    const edibleChecked = document.getElementById("filter-edible")?.checked;
-    const favChecked = document.getElementById("filter-favourites")?.checked;
+
     const query = searchInput.value.trim().toLowerCase();
 
-    cards().forEach((card) => {
+    getCards().forEach(card => {
+
+      const name = card.dataset.name;
+      const description = card.dataset.description;
+
       const isEdible = card.dataset.edible === "true";
-      const isFav = card.dataset.favourite === "true";
-      const name = card.dataset.name.toLowerCase();
-      const description = card.dataset.description.toLowerCase();
+      const isFavourite = card.dataset.favourite === "true";
 
-      const passesEdible = !edibleChecked || isEdible;
-      const passesFav = !favChecked || isFav;
-      const passesSearch =
-        !query || name.includes(query) || description.includes(query);
+      /*
+      SEARCH
+      */
 
-      card.style.display =
-        passesEdible && passesFav && passesSearch ? "" : "none";
+      const matchesSearch =
+        !query ||
+        name.includes(query) ||
+        description.includes(query);
+
+      /*
+      EDIBLE
+      */
+
+      let matchesEdible = true;
+
+      if (edibleFilter === "edible") {
+        matchesEdible = isEdible;
+      }
+
+      if (edibleFilter === "non-edible") {
+        matchesEdible = !isEdible;
+      }
+
+      /*
+      FAVOURITES
+      */
+
+      const matchesFavourite =
+        !favouritesOnly || isFavourite;
+
+      /*
+      FINAL DISPLAY
+      */
+
+      if (
+        matchesSearch &&
+        matchesEdible &&
+        matchesFavourite
+      ) {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+      }
+
     });
   }
 
-  // Wire up filter checkboxes
-  document
-    .getElementById("filter-edible")
-    ?.addEventListener("change", applyFilters);
-  document
-    .getElementById("filter-favourites")
-    ?.addEventListener("change", applyFilters);
+  /*
+  =========================================
+  Favourite button visibility
+  =========================================
+  */
 
-  // Wire up search input
+  function updateFavouriteFilterVisibility() {
+
+    const hasFavourite = [...getCards()].some(card =>
+      card.dataset.favourite === "true"
+    );
+
+    if (hasFavourite) {
+      favouritesBtn.classList.remove("d-none");
+    } else {
+
+      favouritesBtn.classList.add("d-none");
+
+      favouritesOnly = false;
+
+      favouritesBtn.classList.remove("active");
+    }
+  }
+
+  updateFavouriteFilterVisibility();
+
+  /*
+  =========================================
+  Search
+  =========================================
+  */
+
   searchInput.addEventListener("input", applyFilters);
 
-  // Clear filters button
-  document.getElementById("clear-filters")?.addEventListener("click", () => {
-    document.getElementById("filter-edible").checked = false;
-    const favCb = document.getElementById("filter-favourites");
-    if (favCb) favCb.checked = false;
-    searchInput.value = "";
+  /*
+  =========================================
+  Edible filter
+  =========================================
+  */
+
+  edibleBtn.addEventListener("click", () => {
+
+    if (edibleFilter === "edible") {
+      edibleFilter = "all";
+      edibleBtn.classList.remove("active");
+    } else {
+      edibleFilter = "edible";
+      edibleBtn.classList.add("active");
+      nonEdibleBtn.classList.remove("active");
+    }
+
     applyFilters();
+  });
+
+  /*
+  =========================================
+  Non edible filter
+  =========================================
+  */
+
+  nonEdibleBtn.addEventListener("click", () => {
+
+    if (edibleFilter === "non-edible") {
+
+      edibleFilter = "all";
+
+      nonEdibleBtn.classList.remove("active");
+
+    } else {
+
+      edibleFilter = "non-edible";
+
+      nonEdibleBtn.classList.add("active");
+
+      edibleBtn.classList.remove("active");
+    }
+
+    applyFilters();
+  });
+
+  /*
+  =========================================
+  Favourites filter
+  =========================================
+  */
+
+  favouritesBtn.addEventListener("click", () => {
+
+    favouritesOnly = !favouritesOnly;
+
+    favouritesBtn.classList.toggle(
+      "active",
+      favouritesOnly
+    );
+
+    applyFilters();
+  });
+
+  /*
+  =========================================
+  Clear filters
+  =========================================
+  */
+
+  clearBtn.addEventListener("click", () => {
+
+    edibleFilter = "all";
+    favouritesOnly = false;
+
+    searchInput.value = "";
+
+    edibleBtn.classList.remove("active");
+    nonEdibleBtn.classList.remove("active");
+    favouritesBtn.classList.remove("active");
+
+    applyFilters();
+
     filterPanel.classList.add("d-none");
   });
+
+  /*
+  =========================================
+  Bookmark save
+  =========================================
+  */
+
+  document.querySelectorAll(".save-btn").forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      const plantId = btn.dataset.id;
+
+      const current =
+        btn.dataset.favourite === "true";
+
+      try {
+
+        const response = await fetch(
+          "/info/favourite",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: plantId,
+              favourite: !current
+            })
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed request");
+        }
+
+        /*
+        Update UI
+        */
+
+        btn.dataset.favourite = String(!current);
+
+        btn.classList.toggle("saved", !current);
+
+        const card =
+          btn.closest(".plant-card");
+
+        card.dataset.favourite =
+          String(!current);
+
+        updateFavouriteFilterVisibility();
+
+        applyFilters();
+
+      } catch (err) {
+
+        console.error(
+          "Favourite update failed",
+          err
+        );
+      }
+
+    });
+
+  });
+
 });

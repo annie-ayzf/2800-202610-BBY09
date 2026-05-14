@@ -49,6 +49,7 @@ const openai = new OpenAI({
 
 /* MIDDLE WEAR -------------------------------------*/
 
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -69,6 +70,10 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  if (req.path === '/info/favourite') return next();
+  mongoSanitize({ replaceWith: "%" })(req, res, next);
+});
 
 //create a mongoDB place to store session data
 var mongoStore = MongoStore.create({
@@ -95,11 +100,11 @@ const gameRoutes = require("./src/routes/game");
 
 app.use("/", gameRoutes);
 
-router.get("/game", (req, res) => {
-    res.render("game");
-});
+// router.get("/game", (req, res) => {
+//     res.render("game");
+// });
 
-module.exports = router;
+// module.exports = router;
 
 //linking signup-login.js
 app.use("/", authRoutes);
@@ -188,35 +193,80 @@ app.get("/quiz", (req, res) => {
   res.render("quiz");
 });
 
+//Needed the make "Favourites" save per user: 
+app.post("/info/favourite", async (req, res) => {
+  const { ObjectId } = require("mongodb");
+
+  if (!req.session.authenticated) {
+    return res.status(401).json({ success: false });
+  }
+
+  try {
+    const db = await connectDB();
+    const userCollection = db.collection("users");
+    const { id, favourite } = req.body;
+    const userId = req.session.userId;
+
+    if (favourite) {
+      // Add plant ID to favourites array (no duplicates)
+      await userCollection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $addToSet: { favourites: new ObjectId(id) } }
+      );
+    } else {
+      // Remove plant ID from favourites array
+      await userCollection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $pull: { favourites: new ObjectId(id) } }
+      );
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Failed to update favourite:", err);
+    res.status(500).json({ success: false });
+  }
+});
+
 app.get("/info", async (req, res) => {
+  const { ObjectId } = require("mongodb");
   const db = await connectDB();
   const plantCollection = db.collection("plants");
+  const userCollection = db.collection("users");
 
   let plants = await plantCollection.find().toArray();
 
-  for (let plant of plants) {
-    if (!plant.description || plant.description.trim() === "") {
-      try {
-        const description = await generatePlantDescription(plant);
-
-        await plantCollection.updateOne(
-          { _id: plant._id},
-          { $set: {description: description} }
-        );
-
-      plant.description = description;
-
-      } catch (error) {
-        console.error("❌ Error in /info route:", error.message)
-        console.log("Ai descirption failed:", error.message);
-
-        plant.description = "description coming soon."
-      }
-      
+  // Get this user's favourites array
+  let userFavouriteIds = new Set();
+  if (req.session.authenticated && req.session.userId) {
+    const user = await userCollection.findOne({
+      _id: new ObjectId(req.session.userId)
+    });
+    if (user && user.favourites) {
+      userFavouriteIds = new Set(user.favourites.map(id => id.toString()));
     }
   }
 
-  res.render("info", {plants});
+  for (let plant of plants) {
+    // Attach per-user favourite flag
+    plant.favourite = userFavouriteIds.has(plant._id.toString());
+
+    if (!plant.description || plant.description.trim() === "") {
+      try {
+        const description = await generatePlantDescription(plant);
+        await plantCollection.updateOne(
+          { _id: plant._id },
+          { $set: { description: description } }
+        );
+        plant.description = description;
+      } catch (error) {
+        console.error("❌ Error in /info route:", error.message);
+        plant.description = "Description coming soon.";
+      }
+    }
+  }
+
+  res.render("info", { plants });
 });
 
 app.listen(PORT, () => {

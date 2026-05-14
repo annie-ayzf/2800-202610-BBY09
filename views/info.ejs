@@ -1,98 +1,94 @@
 <%- include('templates/header', { pageTitle: 'Information', css: ['info.css'] })  %>
-    <!-- Search Bar -->
-    <nav class="navbar">
-      <div class="container-fluid justify-content-center">
-        <form class="d-flex search-form" role="search">
-          <input
-            class="form-control me-2 search-input"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
+  <!-- Search Bar -->
+  <nav class="navbar">
+    <div class="container-fluid justify-content-center">
+      <form class="d-flex search-form" role="search">
+        <input
+          class="form-control me-2 search-input"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="filter-button" type="button">
+          <img
+            src="/images/filter.png"
+            alt="Filter"
+            class="filter-icon"
           />
+        </button>
+      </form>
 
-          <button class="filter-button" type="button">
-            <img
-              src="/images/filter.png"
-              alt="Filter"
-              class="filter-icon"
-            />
-          </button>
-          <!-- User should be able to press enter and search, so search button commented out for now -->
-          <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
-        </form>
-
-        <!-- FILTER SECTION -->
-        <div id="filter-panel" class="filter-panel d-none">
-          <label class="filter-option">
-            <input type="checkbox" id="filter-edible" />
-            Edible only
-          </label>
-
-          <div id="filter-favourites-wrap" class="<%= plants.some(p => p.favourite) ? '' : 'd-none' %>">
-            <label class="filter-option">
-              <input type="checkbox" id="filter-favourites" />
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                <path class="bookmark-filter-icon" d="M5 3h14a1 1 0 0 1 1 1v17l-8-4-8 4V4a1 1 0 0 1 1-1z"/>
-              </svg>
-              Favourites
-            </label>
-          </div>
-
-          <button id="clear-filters" class="btn btn-sm btn-outline-secondary mt-2 w-100">
-            Clear filters
-          </button>
+      <!-- FILTER SECTION -->
+      <div id="filter-panel" class="filter-panel d-none">
+        <div class="filter-btn-row">
+          <button id="pill-favourites" class="filter-opt-btn">Favourites</button>
+          <button id="pill-edible" class="filter-opt-btn">Edible</button>
         </div>
+        <div class="filter-btn-row">
+          <button id="pill-non-edible" class="filter-opt-btn">Non Edible</button>
+        </div>
+        <button id="clear-filters" class="clear-filter-link">Clear filter</button>
+      </div>
 
       </div>
     </nav>
 
-    <!-- Info Cards -->
+    <!-- Info Cards : changed to include bookmark beside-->
     <div class="container d-flex justify-content-center flex-wrap gap-4 mt-5 info-card-container">
-    <% plants.forEach(function(plant) { %> <!-- for every plant in db make one card-->
-        <div class="card" style="width: 18rem">
-        <img
-            src="<%= plant.image %>"
-            class="card-img-top"
-            alt="<%= plant.name %>"
-        />
+      <% plants.forEach(function(plant) { %>
+        <div
+          class="card plant-card"
+          style="width: 18rem"
+          data-edible="<%= plant.isEdible %>"
+          data-favourite="<%= plant.favourite %>"
+          data-name="<%= plant.name %>"
+          data-description="<%= plant.description || '' %>"
+          >
+          <img
+              src="<%= plant.image %>"
+              class="card-img-top"
+              alt="<%= plant.name %>"
+          />
 
-        <div class="card-body">
-            <h5 class="card-title"><%= plant.name %></h5>
+          <div class="card-body">
 
-            <!--FILTER SECTION (BOOKMARK)-->
-            <button
-              class="save-btn <%= plant.favourite ? 'saved' : '' %>"
-              data-id="<%= plant._id %>"
-              data-favourite="<%= plant.favourite %>"
-              title="<%= plant.favourite ? 'Remove from favourites' : 'Save to favourites' %>"
-              aria-label="Save plant"
-              >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-                <path class="bookmark-icon" d="M5 3h14a1 1 0 0 1 1 1v17l-8-4-8 4V4a1 1 0 0 1 1-1z"/>
-              </svg>
-            </button>
+           <!-- Name + bookmark on the same row -->
+            <div class="card-title-row">
+              <h5 class="card-title mb-0"><%= plant.name %></h5>
+              <button
+                class="save-btn <%= plant.favourite ? 'saved' : '' %>"
+                data-id="<%= plant._id %>"
+                data-favourite="<%= plant.favourite %>"
+                title="<%= plant.favourite ? 'Remove from favourites' : 'Save to favourites' %>"
+                aria-label="Save plant"
+                >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="display:block;">
+                  <path
+                    d="M5 3h14a1 1 0 0 1 1 1v17l-8-4-8 4V4a1 1 0 0 1 1-1z"
+                    style="fill: none; stroke: white; stroke-width: 2;"
+                    class="bookmark-icon"
+                  />
+                </svg>
+              </button>
+            </div>
 
+            <p class="card-text mt-2"><%= plant.description %></p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <b>Edible:</b> <%= plant.isEdible ? "True" : "False" %>
+            </li>
 
-            <p class="card-text">
-            <%= plant.description %>
-            </p>
+            <li class="list-group-item">
+              <b>Location:</b> <%= plant.location %>
+            </li>
+
+            <li class="list-group-item">
+              <b>Habitat:</b> <%= plant.habitat %>
+            </li>
+          </ul>
         </div>
-
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-            <b>Edible:</b> <%= plant.isEdible ? "True" : "False" %>
-            </li>
-
-            <li class="list-group-item">
-            <b>Location:</b> <%= plant.location %>
-            </li>
-
-            <li class="list-group-item">
-            <b>Habitat:</b> <%= plant.habitat %>
-            </li>
-        </ul>
-        </div>
-    <% }) %>
+      <% }) %>
     </div>
-
-<%- include('templates/footer', { js: ['info.js'] }) %>
+  </nav>
+<%- include('templates/footer', { js: ['filter.js'] }) %>
