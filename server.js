@@ -3,7 +3,7 @@ const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-/* Constants */
+/* Constants -----------------------------------------------*/
 const MongoStore = require('connect-mongo').default;
 const session = require("express-session");
 
@@ -47,6 +47,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+/* MIDDLE WEAR -------------------------------------*/
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -89,8 +91,6 @@ app.use(session({
 }
 ));
 
-/* MIDDLE WEAR */
-
 const gameRoutes = require("./src/routes/game");
 
 app.use("/", gameRoutes);
@@ -115,8 +115,6 @@ function imageToBase64(filename) {
   const data = fs.readFileSync(filePath);
   return `data:image/${ext};base64,${data.toString("base64")}`;
 }
-
-/* ROUTES */
 
 // Rewards data to be passed to profile page
 const rewards = [
@@ -151,6 +149,8 @@ const rewards = [
     rewardImg: "fruitTree",
   },
 ];
+
+/* ROUTES -------------------------------------------------------------- */
 
 //profile page to show selectable rewards
 app.get("/profile", (req, res) => {
@@ -207,6 +207,7 @@ app.get("/info", async (req, res) => {
       plant.description = description;
 
       } catch (error) {
+        console.error("❌ Error in /info route:", error.message)
         console.log("Ai descirption failed:", error.message);
 
         plant.description = "description coming soon."

@@ -20,6 +20,29 @@
           <!-- User should be able to press enter and search, so search button commented out for now -->
           <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
         </form>
+
+        <!-- FILTER SECTION -->
+        <div id="filter-panel" class="filter-panel d-none">
+          <label class="filter-option">
+            <input type="checkbox" id="filter-edible" />
+            Edible only
+          </label>
+
+          <div id="filter-favourites-wrap" class="<%= plants.some(p => p.favourite) ? '' : 'd-none' %>">
+            <label class="filter-option">
+              <input type="checkbox" id="filter-favourites" />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                <path class="bookmark-filter-icon" d="M5 3h14a1 1 0 0 1 1 1v17l-8-4-8 4V4a1 1 0 0 1 1-1z"/>
+              </svg>
+              Favourites
+            </label>
+          </div>
+
+          <button id="clear-filters" class="btn btn-sm btn-outline-secondary mt-2 w-100">
+            Clear filters
+          </button>
+        </div>
+
       </div>
     </nav>
 
@@ -35,6 +58,20 @@
 
         <div class="card-body">
             <h5 class="card-title"><%= plant.name %></h5>
+
+            <!--FILTER SECTION (BOOKMARK)-->
+            <button
+              class="save-btn <%= plant.favourite ? 'saved' : '' %>"
+              data-id="<%= plant._id %>"
+              data-favourite="<%= plant.favourite %>"
+              title="<%= plant.favourite ? 'Remove from favourites' : 'Save to favourites' %>"
+              aria-label="Save plant"
+              >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                <path class="bookmark-icon" d="M5 3h14a1 1 0 0 1 1 1v17l-8-4-8 4V4a1 1 0 0 1 1-1z"/>
+              </svg>
+            </button>
+
 
             <p class="card-text">
             <%= plant.description %>
