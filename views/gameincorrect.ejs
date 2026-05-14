@@ -2,20 +2,25 @@
 <div class="min-vh-100 d-flex flex-column px-3 py-4">
 
   <!-- Progress bar -->
-  <div class="d-flex align-items-center justify-content-between mb-3">
-    <!-- Lives/progress bar on the left -->
-      <div class="progress flex-grow-1 me-2" role="progressbar" 
+<div class="d-flex align-items-center justify-content-between mb-3">
+
+  <!-- Red progress bar fills as questions go by -->
+  <div class="progress flex-grow-1 me-2" role="progressbar" 
        aria-label="Lives" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
        style="height: 12px;">
-    <div class="progress-bar progress-bar-striped bg-danger" style="width: 50%"></div>
-    </div>
 
-    <!-- Points badge on the right -->
-    <span class="badge rounded-circle d-flex align-items-center justify-content-center fw-bold"
-        style="width: 40px; height: 40px; font-size: 1rem; background-color: #e8bb6c; color: #fffefb;">
-      <%= questionNumber %>
-    </span>
+    <div class="progress-bar progress-bar-striped bg-danger"
+      style="width: <%= (questionNumber / 5) * 100 %>%">
+    </div>
   </div>
+
+  <!-- Points badge shows total user coins -->
+  <span class="badge rounded-circle d-flex align-items-center justify-content-center fw-bold"
+        style="width: 40px; height: 40px; font-size: 1rem; background-color: #e8bb6c; color: #fffefb;">
+    <%= totalPoints %>
+  </span>
+
+</div>
 
   <!-- NOT EDIBLE banner -->
   <div class="alert alert-danger text-center fw-bold fs-5 mb-3 mx-n3 rounded-3" role="alert">
