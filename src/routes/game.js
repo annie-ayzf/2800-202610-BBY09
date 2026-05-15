@@ -3,6 +3,7 @@ const router = express.Router();
 
 const { ObjectId } = require("mongodb");
 const { connectDB } = require("../../config/database");
+const { updateStudentPoints } = require('./profile');
 
 /* Game Functionality */
 router.get("/game", async (req, res) => {
@@ -146,6 +147,10 @@ router.get("/gameresult", async (req, res) => {
       totalPoints = user.points;
     }
   }
+
+  // updating the student level at the end of game
+  await updateStudentPoints(req.session.email, score);
+
 
   res.render("gameresult", {
     score: score,

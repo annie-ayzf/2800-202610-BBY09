@@ -1,4 +1,5 @@
 <%- include('templates/header', { pageTitle: 'Profile' , css: ['profile.css'] }) %>
+  
   <div class="d-flex p-2 heading-styling">
     <h2 class="heading-element">
       Hello User!
@@ -6,7 +7,7 @@
     <div class="earned-points">
       <img src="/images/plant_points.svg" alt="plant-points-logo" class="img-earned-points">
       <p class="text-earned-points"> Earned Points</p>
-      <p class="text-earned-points"> 25 </p>
+      <p class="text-earned-points"> <%= earnedPoints %> </p>
       <img src="/images/pp.svg" alt="plant-points" class="plant-points-logo">
     </div>
   </div>
@@ -14,7 +15,9 @@
   <div class="container ">
     <div class="container-custom-flex">
 
-      <% for(let i=1; i < levelsInfo.length; i++) { %>
+      <% for(let i=0; i < levelsInfo.length; i++) { %>
+        <!-- Skip rendering for the soil level entry -->
+        <% if(levelsInfo[i].id === 'soil-level') { continue; } %>
 
         <div class="
             level-card
@@ -24,24 +27,26 @@
           ">
 
           <p class="points-text">
-            <%= levelsInfo[i].levelVal * 5 %> Points
+            <%= levelsInfo[i].pointsNeeded %> Points
           </p>
           <img src="/images/Arrow.svg" alt="" class="plant-arrow">
-          <img src="/images/<%= levelsInfo[i].levelImg %>.svg" alt="" class="plant-points">
-          <!-- <p class="level-name">
+          
+          <img src="/images/<%= (userLevel >= levelsInfo[i].levelVal) ? levelsInfo[i].levelImgModal : (levelsInfo[i].levelImg + '.svg') %>" alt="<%= levelsInfo[i].levelName %>" class="plant-points">
+          
+          <p class="level-name">
             <%= levelsInfo[i].levelName %>
-          </p> -->
+          </p>
 
         </div>
 
-        <% } %>
+      <% } %>
 
     </div>
 
     <div class="earned-points">
       <img src="/images/plant_points.svg" alt="plant-points-logo" class="img-earned-points">
-      <p class="text-earned-points">Tress Collected</p>
-      <p class="text-earned-points"> 0 </p>
+      <p class="text-earned-points">Trees Collected</p>
+      <p class="text-earned-points"> <%= treesCollected %> </p>
       <img src="/images/pp.svg" alt="plant-points" class="plant-points-logo ">
     </div>
 

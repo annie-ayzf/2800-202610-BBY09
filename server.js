@@ -15,6 +15,7 @@ const { connectDB } = require("./config/database");
 const app = express();
 
 const authRoutes = require("./src/routes/signup-login");
+const { profileRoutes } = require("./src/routes/profile");
 
 const OpenAI = require("openai");
 const { generatePlantDescription } = require("./src/routes/plantDescriptionAI");
@@ -110,13 +111,9 @@ app.use("/", gameRoutes);
 //linking signup-login.js
 app.use("/", authRoutes);
 
-<<<<<<< HEAD
 //linking profile.js
-const { profileRoutes, updateStudentPoints } = require("./src/routes/profile");
 app.use("/profile", profileRoutes);
 
-=======
->>>>>>> 83557069c8ed0cba58a30cb370f39d3a247b332a
 //Middleware to handle form data
 app.use(express.urlencoded({ extended: true }));
 
@@ -129,7 +126,6 @@ function imageToBase64(filename) {
   return `data:image/${ext};base64,${data.toString("base64")}`;
 }
 
-<<<<<<< HEAD
 /* ROUTES */
 
 /* If a user were to get the game incorrect */
@@ -234,13 +230,12 @@ app.get("/gamecorrect", (req, res) => {
 
 app.get("/gameresult", async (req, res) => {
 
-  await updateStudentPoints(req.session.email, req.session.score);
 
   res.render("gameresult", {
     score: req.session.score,
     total: 5
   });
-=======
+});
 // Rewards data to be passed to profile page
 const rewards = [
   {
@@ -289,7 +284,6 @@ app.post("/profilemodal", (req, res) => {
 
 app.get("/profilemodal", (req, res) => {
   res.render("profilemodal");
->>>>>>> 83557069c8ed0cba58a30cb370f39d3a247b332a
 });
 
 //if theres a session go to quiz.ejs
@@ -381,7 +375,7 @@ app.get("/info", async (req, res) => {
         );
         plant.description = description;
       } catch (error) {
-        console.error("❌ Error in /info route:", error.message);
+        console.error("Error in /info route:", error.message);
         plant.description = "Description coming soon.";
       }
     }

@@ -82,6 +82,12 @@ const levelsInfo = [
  * 
  */
 
+const getStudentLevelCollection = async () => {
+  const db = await connectDB();
+  const studentLevelCollection = db.collection("studentLevel");
+  return studentLevelCollection;
+}
+
 const getAvailableLevels = () => {
   // get all available levels
   return levelsInfo;
@@ -112,12 +118,10 @@ const createStudentLevelPoints = async (studentEmail) => {
 }
 
 const getLevelInfoUsingLevelVal = (levelVal) => {
-  return getAvailableLevels().filter((levelInfo) => levelInfo.levelVal == 1);
+  return getAvailableLevels().filter((levelInfo) => levelInfo.levelVal == levelVal)[0];
 }
 
 const getStudentLevelInfo = async (studentEmail) => {
-  console.log(studentEmail);
-
   const studentLevelRes = await (await getStudentLevelCollection()).findOne({ studentEmail });
   return studentLevelRes;
 }
@@ -138,10 +142,12 @@ const updateStudentPoints = async (studentEmail, pointNeedToBeUpdated) => {
   let currentPoints = currStudentLevelData.points;
   let updatedPoints = pointNeedToBeUpdated + currentPoints;
 
+
   let currentLevel = currStudentLevelData.levelInfo.levelVal;
+
   let nextLevel = currentLevel + 1;
 
-  if (nextLevel >= getAvailableLevels().length) {
+  if (nextLevel > getAvailableLevels().length) {
     let pointsToFinishCurrentLevel = currStudentLevelData.levelInfo.pointsNeeded;
     // Finishing the last level, one loop completion
     if (updatedPoints >= pointsToFinishCurrentLevel) {
@@ -158,7 +164,6 @@ const updateStudentPoints = async (studentEmail, pointNeedToBeUpdated) => {
     }
   } else {
     const nextLevelInfo = getLevelInfoUsingLevelVal(nextLevel);
-
     let pointsToNextLevel = nextLevelInfo.pointsNeeded;
 
     if (updatedPoints >= pointsToNextLevel) {
@@ -171,12 +176,8 @@ const updateStudentPoints = async (studentEmail, pointNeedToBeUpdated) => {
     }
   }
 
-  console.log(newLevelInfo);
-  console.log(newPoints);
-  console.log(newTreesGrown);
 
-
-  const updateResult = await studentLevelCollection.updateOne(
+  const updateResult = await (await getStudentLevelCollection()).updateOne(
     { studentEmail },          // Filter criteria (find this student)
     {
       $set:
@@ -187,13 +188,6 @@ const updateStudentPoints = async (studentEmail, pointNeedToBeUpdated) => {
       }
     }   // Update operation (change or add fields)
   );
-
-  if (updateResult.matchedCount > 0) {
-    console.log("Points system working well");
-  } else {
-    console.log("Points system not working");
-  }
-
 }
 
 const storeLastVisitedState = (studentEmail, lastSeenLevelID, lastLevelVal) => {
@@ -211,11 +205,7 @@ const getLastVisitedState = (studentEmail) => {
   }
 }
 
-const getStudentLevelCollection = async () => {
-  const db = await connectDB();
-  const studentLevelCollection = db.collection("studentLevel");
-  return studentLevelCollection;
-}
+
 
 
 //profile page to show selectable rewards
@@ -230,7 +220,7 @@ profileRoutes.get("/", async (req, res) => {
 
 
   // persist the visited time and current level at the time of visiting
-  const animator = false;
+  let animator = false;
   console.log(currStudentLeveldata);
 
   if (currStudentLeveldata.levelInfo.levelVal > lastVisitedState.levelVal) {
@@ -246,9 +236,13 @@ profileRoutes.get("/", async (req, res) => {
       levelImgModal: currStudentLeveldata.levelInfo.levelImgModal,
       levelName: currStudentLeveldata.levelInfo.levelName,
       animator,
-      userLevel: 2
+      // Bind actual live values from the student's database document
+      userLevel: currStudentLeveldata.levelInfo.levelVal,
+      earnedPoints: currStudentLeveldata.points,
+      treesCollected: currStudentLeveldata.treesGrown
     }
   );
+
 });
 
 module.exports = {
