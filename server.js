@@ -24,6 +24,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 const mongoSanitize = require('express-mongo-sanitize');
 
+
 const PORT = process.env.PORT || 3000;
 const expireTime = 365 * 24 * 60 * 60 * 1000; //1 year
 
@@ -84,6 +85,11 @@ app.use(session({
 //linking signup-login.js
 const authRoutes = require("./src/routes/signup-login");
 app.use("/", authRoutes);
+
+//linking profile.js
+const { profileRoutes, updateStudentPoints } = require("./src/routes/profile");
+app.use("/profile", profileRoutes);
+
 //Middleware to handle form data
 app.use(express.urlencoded({ extended: true }));
 
@@ -193,72 +199,14 @@ app.get("/restartquiz", (req, res) => {
   res.redirect("/game");
 });
 
-// Rewards data to be passed to profile page
-const rewards = [
-  {
-    id: "seed-option",
-    value: "seed",
-    pointsImg: "5PlantPoints",
-    rewardImg: "Seed",
-    rewardImgModal: "seedColor.svg",
-    rewardName: "Seed!"
-  },
-  {
-    id: "sprout-option",
-    value: "sprout",
-    pointsImg: "10PlantPoints",
-    rewardImg: "Sprout",
-    rewardImgModal: "SproutColor1.svg",
-    rewardName: "Sprout!"
-  },
-  {
-    id: "seedling-option",
-    value: "seedling",
-    pointsImg: "15PlantPoints",
-    rewardImg: "seedling",
-    rewardImgModal: "SeedlingColor.svg",
-    rewardName: "Seedling!"
-  },
-  {
-    id: "youngTree-option",
-    value: "youngTree",
-    pointsImg: "20PlantPoints",
-    rewardImg: "youngTree",
-    rewardImgModal: "youngTreeColor.svg",
-    rewardName: "Young Tree!"
-  },
-  {
-    id: "fruitTree-option",
-    value: "fruitTree",
-    pointsImg: "25PlantPoints",
-    rewardImg: "fruitTree",
-    rewardImgModal: "fruitTreeColor_1.svg",
-    rewardName: "Fruit Tree"
-  },
-];
-
-//profile page to show selectable rewards
-app.get("/profile", (req, res) => {
-  res.render("profile", { rewards });
-});
-
-//profile modal to show the earned rewards
-app.post("/profilemodal", (req, res) => {
-  let selectedOption = req.body.reward;
-  console.log(selectedOption);
-  res.send("hello request received");
-  // res.render("profilemodal", { rewardImgModal: "fruitTreeColor_1.svg", rewardName: "Fruit Tree"  });
-});
-
-app.get('/rewardRedemption', (req, res) => {
-  return res.render('tmp', {imgSrc});
-})
 
 app.get("/gamecorrect", (req, res) => {
   res.render("gamecorrect");
 });
 
-app.get("/gameresult", (req, res) => {
+app.get("/gameresult", async (req, res) => {
+
+  await updateStudentPoints(req.session.email, req.session.score);
 
   res.render("gameresult", {
     score: req.session.score,
