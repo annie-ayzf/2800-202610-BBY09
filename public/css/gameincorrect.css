@@ -75,4 +75,5 @@
 
 .progress-fill {
     width: var(--progress);
+    background-color: #dc3545;
 }
