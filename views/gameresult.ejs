@@ -13,14 +13,19 @@
 
         <!-- Progress bar shows correct answers in green and missed answers in red -->
         <div class="result-bar">
-            <div class="result-green" style="width: <%= (score / total) * 100 %>%"></div>
-            <div class="result-red" style="width: <%= ((total - score) / total) * 100 %>%"></div>
+            <div class="result-green"
+                style="--greenWidth: <%= (score / total) * 100 %>%">
+            </div>
+
+            <div class="result-red"
+                style="--redWidth: <%= ((total - score) / total) * 100 %>%">
+            </div>
         </div>
 
         <!-- TOTAL POINT BOX -->
         <div class="resultCard-body">
             <h5 class="card-title">TOTAL POINTS</h5>
-            <p class="card-text"><%= totalPoints %></p>
+            <p class="card-text"><%= typeof totalPoints !== 'undefined' ? totalPoints : 0 %></p>
         </div>
 
         <div class="card-footer text-body-secondary">
@@ -58,4 +63,4 @@
 
 </div>
 
-<%- include('templates/footer', { js: ['gameresult.js'] }) %>
+<%- include('templates/footer') %>
