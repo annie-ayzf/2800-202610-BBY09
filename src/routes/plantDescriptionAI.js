@@ -6,7 +6,7 @@ const openai = new OpenAI({
 
 async function generatePlantDescription(plant) {
   const response = await openai.responses.create({
-    model: "gpt-5.5",
+    model: "gpt-5-nano",
     input: `
 Write one short student-friendly description for this plant.
 
