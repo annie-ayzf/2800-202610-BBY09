@@ -1,4 +1,5 @@
-<%- include('templates/header', { pageTitle: 'Profile', css: ['profile.css'] })  %>
+<%- include('templates/header', { pageTitle: 'Profile' , css: ['profile.css'] }) %>
+  
   <div class="d-flex p-2 heading-styling">
     <h2 class="heading-element">
       Hello User!
@@ -6,28 +7,48 @@
     <div class="earned-points">
       <img src="/images/plant_points.svg" alt="plant-points-logo" class="img-earned-points">
       <p class="text-earned-points"> Earned Points</p>
-      <p class="text-earned-points"> 25 </p>
+      <p class="text-earned-points"> <%= earnedPoints %> </p>
       <img src="/images/pp.svg" alt="plant-points" class="plant-points-logo">
     </div>
   </div>
 
   <div class="container ">
-    <form action="/profilemodal" method="POST" class="container-custom-flex ">
+    <div class="container-custom-flex">
 
-      <% for(let reward of rewards) { %>
-        <label for="<%= reward.id %>-option">
-          <input type="radio" id="<%= reward.id %>-option" value="<%= reward.value %>" name="reward">
-          <div class="alert alert-danger bg-light card-custom-flex">
-            <img src="/images/<%= reward.pointsImg %>.svg" alt="" class="plant-points">
-            <img src="/images/Arrow.svg" alt="" class="plant-points">
-            <img src="/images/<%= reward.rewardImg %>.svg" alt="" class="plant-points">
-          </div>
-        </label>
+      <% for(let i=0; i < levelsInfo.length; i++) { %>
+        <!-- Skip rendering for the soil level entry -->
+        <% if(levelsInfo[i].id === 'soil-level') { continue; } %>
 
-        <% } %>
+        <div class="
+            level-card
+            <% if(userLevel > levelsInfo[i].levelVal) { %> completed <% } %>
+            <% if(userLevel === levelsInfo[i].levelVal) { %> current <% } %>
+            <% if(userLevel < levelsInfo[i].levelVal) { %> locked <% } %>
+          ">
 
-          <button type="submit" class="btn btn-success redeem-btn">Redeem</button>
+          <p class="points-text">
+            <%= levelsInfo[i].pointsNeeded %> Points
+          </p>
+          <img src="/images/Arrow.svg" alt="" class="plant-arrow">
+          
+          <img src="/images/<%= (userLevel >= levelsInfo[i].levelVal) ? levelsInfo[i].levelImgModal : (levelsInfo[i].levelImg + '.svg') %>" alt="<%= levelsInfo[i].levelName %>" class="plant-points">
+          
+          <p class="level-name">
+            <%= levelsInfo[i].levelName %>
+          </p>
 
-    </form>
+        </div>
+
+      <% } %>
+
+    </div>
+
+    <div class="earned-points">
+      <img src="/images/plant_points.svg" alt="plant-points-logo" class="img-earned-points">
+      <p class="text-earned-points">Trees Collected</p>
+      <p class="text-earned-points"> <%= treesCollected %> </p>
+      <img src="/images/pp.svg" alt="plant-points" class="plant-points-logo ">
+    </div>
+
   </div>
-<%- include('templates/footer', { js: ['profile.js'] }) %>
+  <%- include('templates/footer') %>

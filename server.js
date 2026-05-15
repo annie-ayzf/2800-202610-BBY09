@@ -15,6 +15,7 @@ const { connectDB } = require("./config/database");
 const app = express();
 
 const authRoutes = require("./src/routes/signup-login");
+const { profileRoutes } = require("./src/routes/profile");
 
 const OpenAI = require("openai");
 const { generatePlantDescription } = require("./src/routes/plantDescriptionAI");
@@ -29,6 +30,7 @@ app.use("/js", express.static(path.join(__dirname, "src/routes")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 const mongoSanitize = require('express-mongo-sanitize');
+
 
 const PORT = process.env.PORT || 3000;
 const expireTime = 365 * 24 * 60 * 60 * 1000; //1 year
@@ -77,22 +79,22 @@ app.use((req, res, next) => {
 
 //create a mongoDB place to store session data
 var mongoStore = MongoStore.create({
-    mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_session_database}`,
-    crypto: {
-        secret: mongodb_session_secret
-    },
-    ttl: 365 * 24 * 60 * 60
+  mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_session_database}`,
+  crypto: {
+    secret: mongodb_session_secret
+  },
+  ttl: 365 * 24 * 60 * 60
 });
 
 //turns on session. what allows login to be remembered
 app.use(session({
-    secret: node_session_secret,
-    store: mongoStore,
-    saveUninitialized: false,
-    resave: false,
-    cookie: {
-        maxAge: expireTime
-    }
+  secret: node_session_secret,
+  store: mongoStore,
+  saveUninitialized: false,
+  resave: false,
+  cookie: {
+    maxAge: expireTime
+  }
 }
 ));
 
@@ -109,6 +111,9 @@ app.use("/", gameRoutes);
 //linking signup-login.js
 app.use("/", authRoutes);
 
+//linking profile.js
+app.use("/profile", profileRoutes);
+
 //Middleware to handle form data
 app.use(express.urlencoded({ extended: true }));
 
@@ -121,6 +126,116 @@ function imageToBase64(filename) {
   return `data:image/${ext};base64,${data.toString("base64")}`;
 }
 
+/* ROUTES */
+
+/* If a user were to get the game incorrect */
+app.get("/gameincorrect", (req, res) => {
+  const plant = req.session.wrongPlant;
+
+  if (!plant) {
+    return res.redirect("/game");
+  }
+
+  const questionNumber = req.session.questionNumber;
+
+  res.render("gameincorrect", {
+    plant,
+    questionNumber: req.session.questionNumber
+  });
+});
+
+/* Game Functionality */
+app.get("/game", async (req, res) => {
+
+  const db = await connectDB();
+
+  // first time quiz starts
+  if (!req.session.questions) {
+
+    const questions = await db.collection("plants").aggregate([{ $sample: { size: 5 } }]).toArray();
+
+    req.session.questions = questions;
+
+    req.session.questionNumber = 0;
+
+    req.session.score = 0;
+  }
+
+  // finished all questions
+  if (req.session.questionNumber >= 5) {
+
+    res.redirect("/gameresult");
+
+    return;
+  }
+
+  const plant = req.session.questions[req.session.questionNumber];
+
+  res.render("game", {
+    plant,
+    questionNumber:
+      req.session.questionNumber + 1
+  });
+});
+
+/* If a user were to get an answer correct */
+app.post("/answer", (req, res) => {
+  const plant = req.session.questions[req.session.questionNumber];
+  const userAnswer = req.body.answer;
+  const correctAnswer = plant.isEdible ? "T" : "F";
+
+  // correct answer
+  if (userAnswer === correctAnswer) {
+    req.session.score++;
+    req.session.questionNumber++;
+    res.redirect("/game");
+    return;
+  }
+
+  // wrong answer - save the plant they got wrong 
+  req.session.wrongPlant = plant;
+  req.session.questionNumber++;
+  req.session.save(() => {        // force session to save before redirect
+    res.redirect("/gameincorrect");
+  });
+});
+
+app.get("/nextquestion", (req, res) => {
+
+  res.redirect("/game");
+});
+
+/*Game Results */
+app.get("/gameresult", (req, res) => {
+
+  res.render("gameresult", {
+    score: req.session.score,
+    total: 5
+  });
+});
+
+/* Restarts Quiz */
+app.get("/restartquiz", (req, res) => {
+  req.session.questions = null;
+  req.session.questionNumber = 0;
+  req.session.score = 0;
+
+  res.redirect("/game");
+});
+
+
+app.get("/gamecorrect", (req, res) => {
+  res.render("gamecorrect");
+});
+
+app.get("/gameresult", async (req, res) => {
+
+
+  res.render("gameresult", {
+    score: req.session.score,
+    total: 5
+  });
+});
 // Rewards data to be passed to profile page
 const rewards = [
   {
@@ -260,7 +375,7 @@ app.get("/info", async (req, res) => {
         );
         plant.description = description;
       } catch (error) {
-        console.error("❌ Error in /info route:", error.message);
+        console.error("Error in /info route:", error.message);
         plant.description = "Description coming soon.";
       }
     }

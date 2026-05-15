@@ -3,6 +3,9 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 const { connectDB } = require("../../config/database");
+
+const { createStudentLevelPoints } = require("./profile");
+
 const saltRounds = 12;
 
 // Sign up page
@@ -56,6 +59,13 @@ router.post('/signingup', async (req, res) => {
         const hashedPassword =
             await bcrypt.hash(password, saltRounds);
 
+        req.session.authenticated = true;
+        req.session.name = name;
+        //added for profile page use
+        req.session.email = email;
+
+        // On Signup, a record for student level is created
+        await createStudentLevelPoints(email);
         const db = await connectDB();
 
         const userCollection =
