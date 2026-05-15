@@ -5,17 +5,14 @@
   --white: #ffffff;
   --button-green: #67730e;
 }
-
+.body {
+  background-color: var(--light-cream);
+}
 .badge {
   background-color: red;
   color: var(--light-cream);
   font-size: 0.8rem;
   padding: 0.25em 0.5em;
-}
-
-/* Progress bar */
-.progress-bar-custom {
-  background-color: red;
 }
 
 /* NOT EDIBLE banner */
@@ -74,4 +71,9 @@
 .card-bodyIncorrectPlants {
   background-color: var(--light-green);
   border-radius: 0 0 8px 8px;
+}
+
+.progress-fill {
+    width: var(--progress);
+    background-color: #dc3545;
 }

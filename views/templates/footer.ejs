@@ -1,16 +1,19 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="/css/footer.css">
-
-<div class="bottom-nav">
-  <a href="/info" class="nav-link-custom">
-    <span class="material-icons nav-icon">menu_book</span>
-  </a>
-
-  <a href="/quiz" class="nav-link-custom">
-    <span class="material-icons nav-icon">sports_esports</span>
-  </a>
-
-  <a href="/profile" class="nav-link-custom">
-    <span class="material-icons nav-icon">account_circle</span>
-  </a>
-</div>
+  <link rel="stylesheet" href="/css/footer.css">
+    <div class="bottom-nav">
+      <a href="/info" class="nav-link-custom">
+        <span class="material-icons nav-icon">menu_book</span>
+      </a>
+      <a href="/quiz" class="nav-link-custom">
+        <span class="material-icons nav-icon">sports_esports</span>
+      </a>
+      <a href="/profile" class="nav-link-custom">
+        <span class="material-icons nav-icon">account_circle</span>
+      </a>
+    </div>
+    <% if (typeof js !== 'undefined') { %>
+      <% for(let i = 0; i < js.length; i++) { %>
+        <script src="/js/<%= js[i] %>"></script>
+      <% } %>
+    <% } %>
+  </body>
+</html>

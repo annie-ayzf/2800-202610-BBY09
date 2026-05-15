@@ -1,60 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('templates/header', { pageTitle: 'Quiz', css: ['gameresult.css'] })  %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<head>
-    <title>Quiz Result</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="min-vh-100 d-flex flex-column px-3 py-4">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/gameresult.css">
-</head>
-
-<body>
-
-    <div class="result-page">
-
-        <div class="result-card">
-
-            <h1 class="result-title">NICE WORK!</h1>
-
-            <p class="score-text">You got 1 out of 2 right!</p>
-
-            <div class="progress-pill">
-                <div class="progress-fill"></div>
-            </div>
-
-            <div class="points-box">
-                <p>TOTAL POINTS:</p>
-                <h2>1</h2>
-            </div>
-
-            <div class="stats-area">
-                <div class="stat-box">
-                    <h3>1</h3>
-                    <p>Correct</p>
-                </div>
-
-                <div class="stat-box">
-                    <h3>1</h3>
-                    <p>Missed</p>
-                </div>
-            </div>
-
-            <div class="button-area">
-                <a href="/game" class="result-btn">Play again?</a>
-                <a href="/quiz" class="result-btn">Home</a>
-            </div>
-
-        </div>
-
-        <%- include('templates/footer') %>
-
+    <!-- WORK BANNER -->
+    <div class="alert alert-success text-center fw-bold fs-5 mb-3 mx-n3 rounded-3" role="alert">
+        <h1>Nice work, Name!</h1>
+        <br>
     </div>
 
-</body>
+    <div class="card text-center">
 
-</html>
+        <!-- Progress bar shows correct answers in green and missed answers in red -->
+        <div class="result-bar">
+            <div class="result-green"
+                style="--greenWidth: <%= (score / total) * 100 %>%">
+            </div>
+
+            <div class="result-red"
+                style="--redWidth: <%= ((total - score) / total) * 100 %>%">
+            </div>
+        </div>
+
+        <!-- TOTAL POINT BOX -->
+        <div class="resultCard-body">
+            <h5 class="card-title">TOTAL POINTS</h5>
+            <p class="card-text"><%= typeof totalPoints !== 'undefined' ? totalPoints : 0 %></p>
+        </div>
+
+        <div class="card-footer text-body-secondary">
+            <div class="d-flex gap-2 justify-content-center">
+
+                <div class="card border-success mb-3 flex-fill">
+                    <div class="card-body text-success">
+                        <h5 class="card-title">CORRECT</h5>
+                        <p class="card-text"><%= score %></p>
+                    </div>
+                </div>
+
+                <div class="card border-danger mb-3 flex-fill">
+                    <div class="card-body text-danger">
+                        <h5 class="card-title">MISSED</h5>
+                        <p class="card-text"><%= total - score %></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-2">
+        <div class="alert alert-warning d-inline-flex align-items-center gap-2 px-3 py-2" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>Be careful of your surroundings!</span>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 pb-2 mt-3 mx-auto" style="width: 90%;">
+        <a href="/restartquiz" class="btn btn-lg fw-semibold btn-continue rounded-3 flex-fill">Play Again</a>
+        <a href="/quiz" class="btn btn-lg fw-semibold btn-continue rounded-3 flex-fill">Home</a>
+    </div>
+
+</div>
+
+<%- include('templates/footer') %>
