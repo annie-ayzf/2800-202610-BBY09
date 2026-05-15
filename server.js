@@ -3,15 +3,21 @@ const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-/* Constants */
+/* Constants -----------------------------------------------*/
 const MongoStore = require('connect-mongo').default;
 const session = require("express-session");
 
 const express = require("express");
+const router = express.Router();
 const path = require("path");
 const fs = require("fs");
 const { connectDB } = require("./config/database");
 const app = express();
+
+const authRoutes = require("./src/routes/signup-login");
+
+const OpenAI = require("openai");
+const { generatePlantDescription } = require("./src/routes/plantDescriptionAI");
 
 //Express files in views folder to render ejs
 app.set("view engine", "ejs");
@@ -19,7 +25,7 @@ app.set("views", path.join(__dirname, "views"));
 
 //Express files in public folder to render css and images
 app.use(express.static(__dirname + "/public"));
-app.use("/js", express.static(path.join(__dirname, "src/js")));
+app.use("/js", express.static(path.join(__dirname, "src/routes")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 const mongoSanitize = require('express-mongo-sanitize');
@@ -37,6 +43,13 @@ const mongodb_session_database = process.env.MONGODB_SESSION_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 
 const node_session_secret = process.env.NODE_SESSION_SECRET;
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+/* MIDDLE WEAR -------------------------------------*/
+
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -58,6 +71,10 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  if (req.path === '/info/favourite') return next();
+  mongoSanitize({ replaceWith: "%" })(req, res, next);
+});
 
 //create a mongoDB place to store session data
 var mongoStore = MongoStore.create({
@@ -80,16 +97,26 @@ app.use(session({
 }
 ));
 
-/* MIDDLE WEAR */
+const gameRoutes = require("./src/routes/game");
+
+app.use("/", gameRoutes);
+
+// router.get("/game", (req, res) => {
+//     res.render("game");
+// });
+
+// module.exports = router;
 
 //linking signup-login.js
-const authRoutes = require("./src/routes/signup-login");
 app.use("/", authRoutes);
 
+<<<<<<< HEAD
 //linking profile.js
 const { profileRoutes, updateStudentPoints } = require("./src/routes/profile");
 app.use("/profile", profileRoutes);
 
+=======
+>>>>>>> 83557069c8ed0cba58a30cb370f39d3a247b332a
 //Middleware to handle form data
 app.use(express.urlencoded({ extended: true }));
 
@@ -102,6 +129,7 @@ function imageToBase64(filename) {
   return `data:image/${ext};base64,${data.toString("base64")}`;
 }
 
+<<<<<<< HEAD
 /* ROUTES */
 
 /* If a user were to get the game incorrect */
@@ -212,6 +240,56 @@ app.get("/gameresult", async (req, res) => {
     score: req.session.score,
     total: 5
   });
+=======
+// Rewards data to be passed to profile page
+const rewards = [
+  {
+    id: "seed-option",
+    value: "seed",
+    pointsImg: "5PlantPoints",
+    rewardImg: "Seed",
+  },
+  {
+    id: "sprout-option",
+    value: "sprout",
+    pointsImg: "10PlantPoints",
+    rewardImg: "Sprout",
+  },
+  {
+    id: "seedling-option",
+    value: "seedling",
+    pointsImg: "15PlantPoints",
+    rewardImg: "seedling",
+  },
+  {
+    id: "youngTree-option",
+    value: "youngTree",
+    pointsImg: "20PlantPoints",
+    rewardImg: "youngTree",
+  },
+  {
+    id: "fruitTree-option",
+    value: "fruitTree",
+    pointsImg: "25PlantPoints",
+    rewardImg: "fruitTree",
+  },
+];
+
+/* ROUTES -------------------------------------------------------------- */
+
+//profile page to show selectable rewards
+app.get("/profile", (req, res) => {
+  res.render("profile", { rewards });
+});
+
+//profile modal to show the earned rewards
+app.post("/profilemodal", (req, res) => {
+  res.render("profilemodal");
+});
+
+app.get("/profilemodal", (req, res) => {
+  res.render("profilemodal");
+>>>>>>> 83557069c8ed0cba58a30cb370f39d3a247b332a
 });
 
 //if theres a session go to quiz.ejs
@@ -236,8 +314,80 @@ app.get("/quiz", (req, res) => {
   res.render("quiz");
 });
 
-app.get("/info", (req, res) => {
-  res.render("info");
+//Needed the make "Favourites" save per user: 
+app.post("/info/favourite", async (req, res) => {
+  const { ObjectId } = require("mongodb");
+
+  if (!req.session.authenticated) {
+    return res.status(401).json({ success: false });
+  }
+
+  try {
+    const db = await connectDB();
+    const userCollection = db.collection("users");
+    const { id, favourite } = req.body;
+    const userId = req.session.userId;
+
+    if (favourite) {
+      // Add plant ID to favourites array (no duplicates)
+      await userCollection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $addToSet: { favourites: new ObjectId(id) } }
+      );
+    } else {
+      // Remove plant ID from favourites array
+      await userCollection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $pull: { favourites: new ObjectId(id) } }
+      );
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Failed to update favourite:", err);
+    res.status(500).json({ success: false });
+  }
+});
+
+app.get("/info", async (req, res) => {
+  const { ObjectId } = require("mongodb");
+  const db = await connectDB();
+  const plantCollection = db.collection("plants");
+  const userCollection = db.collection("users");
+
+  let plants = await plantCollection.find().toArray();
+
+  // Get this user's favourites array
+  let userFavouriteIds = new Set();
+  if (req.session.authenticated && req.session.userId) {
+    const user = await userCollection.findOne({
+      _id: new ObjectId(req.session.userId)
+    });
+    if (user && user.favourites) {
+      userFavouriteIds = new Set(user.favourites.map(id => id.toString()));
+    }
+  }
+
+  for (let plant of plants) {
+    // Attach per-user favourite flag
+    plant.favourite = userFavouriteIds.has(plant._id.toString());
+
+    if (!plant.description || plant.description.trim() === "") {
+      try {
+        const description = await generatePlantDescription(plant);
+        await plantCollection.updateOne(
+          { _id: plant._id },
+          { $set: { description: description } }
+        );
+        plant.description = description;
+      } catch (error) {
+        console.error("❌ Error in /info route:", error.message);
+        plant.description = "Description coming soon.";
+      }
+    }
+  }
+
+  res.render("info", { plants });
 });
 
 app.listen(PORT, () => {
