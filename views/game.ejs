@@ -5,11 +5,13 @@
 
         <div class="progress-area">
             <div class="progress-bar-custom">
-                <div class="progress-fill" style="width: <%= (questionNumber / 5) * 100 %>%"></div>
+                <div class="progress-fill"
+                    style="--progress: <%= (questionNumber / 5) * 100 %>%;">
+                </div>
             </div>
 
             <div class="question-number">
-                <%= totalPoints %>
+                <%= typeof totalPoints !== 'undefined' ? totalPoints : 0 %>
             </div>
         </div>
 

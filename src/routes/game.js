@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-// needed to find logged in user by MongoDB _id
 const { ObjectId } = require("mongodb");
-
 const { connectDB } = require("../../config/database");
 
 /* Game Functionality */
@@ -11,7 +9,6 @@ router.get("/game", async (req, res) => {
 
   const db = await connectDB();
 
-  // first time quiz starts
   if (!req.session.questions) {
 
     const questions = await db
@@ -24,14 +21,12 @@ router.get("/game", async (req, res) => {
     req.session.score = 0;
   }
 
-  // finished all questions
   if (req.session.questionNumber >= 5) {
     return res.redirect("/gameresult");
   }
 
   const plant = req.session.questions[req.session.questionNumber];
 
-  // gets saved total points from user account
   let totalPoints = req.session.score || 0;
 
   if (req.session.userId) {
@@ -45,10 +40,8 @@ router.get("/game", async (req, res) => {
   }
 
   res.render("game", {
-    plant,
+    plant: plant,
     questionNumber: req.session.questionNumber + 1,
-
-    // sends total saved points to yellow circle
     totalPoints: totalPoints
   });
 });
@@ -56,13 +49,20 @@ router.get("/game", async (req, res) => {
 /* Correct / Wrong Answer */
 router.post("/answer", (req, res) => {
 
+  if (!req.session.questions || req.session.questionNumber == null) {
+    return res.redirect("/game");
+  }
+
   const plant = req.session.questions[req.session.questionNumber];
+
+  if (!plant) {
+    return res.redirect("/game");
+  }
 
   const userAnswer = req.body.answer;
 
   const correctAnswer = plant.isEdible ? "T" : "F";
 
-  // correct
   if (userAnswer === correctAnswer) {
     req.session.score++;
     req.session.questionNumber++;
@@ -70,7 +70,6 @@ router.post("/answer", (req, res) => {
     return res.redirect("/game");
   }
 
-  // wrong
   req.session.wrongPlant = plant;
   req.session.questionNumber++;
 
@@ -90,7 +89,6 @@ router.get("/gameincorrect", async (req, res) => {
     return res.redirect("/game");
   }
 
-  // gets saved total points from user account
   let totalPoints = req.session.score || 0;
 
   if (req.session.userId) {
@@ -104,10 +102,8 @@ router.get("/gameincorrect", async (req, res) => {
   }
 
   res.render("gameincorrect", {
-    plant,
+    plant: plant,
     questionNumber: req.session.questionNumber,
-
-    // sends total saved points to incorrect page
     totalPoints: totalPoints
   });
 });
@@ -125,7 +121,6 @@ router.get("/gameresult", async (req, res) => {
   const score = req.session.score || 0;
   const total = 5;
 
-  // saves score only once per quiz attempt
   if (req.session.userId && !req.session.scoreSaved) {
     await db.collection("users").updateOne(
       { _id: new ObjectId(req.session.userId) },
@@ -153,9 +148,9 @@ router.get("/gameresult", async (req, res) => {
   }
 
   res.render("gameresult", {
-    score,
-    total,
-    totalPoints
+    score: score,
+    total: total,
+    totalPoints: totalPoints
   });
 });
 
@@ -172,7 +167,13 @@ router.get("/restartquiz", (req, res) => {
 
 /* Correct Screen */
 router.get("/gamecorrect", (req, res) => {
-  res.render("gamecorrect");
+
+  let totalPoints = req.session.score || 0;
+
+  res.render("gamecorrect", {
+    totalPoints: totalPoints,
+    questionNumber: req.session.questionNumber
+  });
 });
 
 module.exports = router;
