@@ -1,44 +1,61 @@
+<!-- game.ejs — Active quiz screen
+ Rendered by GET /game for each of the 5 questions.
+ Receives: plant (object), questionNumber (1-5), totalPoints (number)
+
+ The form POSTs to /answer with value "T" or "F".
+ game.js (router) compares the answer against plant.isEdible and
+ redirects to /gameincorrect or back to /game for the next question.
+-->
+
 <%- include('templates/header', { pageTitle: 'Quiz', css: ['game.css'] })  %>
+<div class="min-vh-100 d-flex flex-column px-3 py-4">
+   
+    <!-- Progress bar + live points display -->
+    <div class="progress-area">
 
-<div class="app-container">
-    <div class="phone-card">
+        <div class="progress-bar-custom">
+            <!--Progress fill uses a CSS custom property --progress so the bar
+            width is driven entirely by CSS. questionNumber - 1 is used so
+            the bar reflects questions *answered*, not the current question. -->
 
-        <div class="progress-area">
-            <div class="progress-bar-custom">
-                <div class="progress-fill"
-                    style="--progress: <%= ((questionNumber - 1) / 5) * 100 %>%;">
-                </div>
-            </div>
-
-            <div class="question-number">
-                <%= typeof totalPoints !== 'undefined' ? totalPoints : 0 %>
-            </div>
+            <div
+            class="progress-fill"
+            style="--progress: <%= ((questionNumber - 1) / 5) * 100 %>%;"
+            ></div>
         </div>
 
-        <div class="question-box">
-            Is this edible?
-        </div>
-
-        <div class="quiz-count">
-            <%= questionNumber %> / 5
-        </div>
-
-        <div class="image-area">
-            <img src="<%= plant.image %>" class="quiz-img">
-        </div>
-
-        <div class="plant-name">
-            <%= plant.name %>
-        </div>
-
-        <form method="POST" action="/answer">
-            <div class="tf-buttons">
-                <button type="submit" name="answer" value="T" class="tf-btn true-btn">T</button>
-                <button type="submit" name="answer" value="F" class="tf-btn false-btn">F</button>
-            </div>
-        </form>
-
+      <!-- Falls back to 0 if totalPoints is not passed by the route -->
+      <div class="question-number">
+        <%= typeof totalPoints !== 'undefined' ? totalPoints : 0 %>
+      </div>
     </div>
+
+    <!-- Static question prompt -->
+    <div class="question-box">
+      Is this edible?
+    </div>
+
+    <!-- e.g. "2 / 5" -->
+    <div class="quiz-count">
+      <%= questionNumber %> / 5
+    </div>
+
+    <!-- Plant image -->
+    <div class="image-area">
+      <img src="<%= plant.image %>" class="quiz-img" alt="<%= plant.name %>" />
+    </div>
+
+    <div class="plant-name">
+      <%= plant.name %>
+    </div>
+
+    <!-- Answer form — POSTs "T" or "F" to /answer -->
+    <form method="POST" action="/answer">
+      <div class="tf-buttons">
+        <button type="submit" name="answer" value="T" class="tf-btn true-btn">T</button>
+        <button type="submit" name="answer" value="F" class="tf-btn false-btn">F</button>
+      </div>
+    </form>
 </div>
 
 <%- include('templates/footer', { js: ['game.js'] }) %>

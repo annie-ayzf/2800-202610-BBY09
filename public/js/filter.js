@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  /* Element references */
   const filterBtn = document.querySelector(".filter-button");
   const filterPanel = document.getElementById("filter-panel");
   const searchInput = document.querySelector(".search-input");
@@ -8,19 +9,39 @@ document.addEventListener("DOMContentLoaded", () => {
   const favouritesBtn = document.getElementById("pill-favourites");
   const clearBtn = document.getElementById("clear-filters");
 
-  let edibleFilter = "all";
+  /* Filter state */
+  let edibleFilter = "all";   // "all" | "edible" | "non-edible"
   let favouritesOnly = false;
 
-  function getCards() {
-    return document.querySelectorAll(".plant-card");
+  /* Helpers */
+
+  /** Returns all plant cards currently in the DOM. */
+  const getCards = () => document.querySelectorAll(".plant-card");
+
+  /**
+   * Toggles a pill button between active and a given value,
+   * reverting to "all" when the same pill is clicked again (deselect).
+   */
+  function toggleEdiblePill(clicked, self, other) {
+    if (edibleFilter === clicked) {
+      edibleFilter = "all";
+      self.classList.remove("active");
+    } else {
+      edibleFilter = clicked;
+      self.classList.add("active");
+      other.classList.remove("active");
+    }
   }
 
-  // ── Toggle filter panel ──────────────────────────────────────
-  filterBtn.addEventListener("click", () => {
-    filterPanel.classList.toggle("d-none");
-  });
+  /* Core filter logic */
 
-  // ── Apply all filters ────────────────────────────────────────
+  /**
+   * Reads current state (search query, edible filter, favourites toggle)
+   * and shows/hides each card accordingly.
+   *
+   * Each card carries data-* attributes set server-side in info.ejs:
+   *   data-edible, data-favourite, data-name, data-description
+   */
   function applyFilters() {
     const query = searchInput.value.trim().toLowerCase();
 
@@ -31,52 +52,23 @@ document.addEventListener("DOMContentLoaded", () => {
       const description = card.dataset.description;
 
       const matchesSearch = !query || name.includes(query) || description.includes(query);
-      const matchesEdible =
-        edibleFilter === "all" ||
-        (edibleFilter === "edible" && isEdible) ||
+      const matchesEdible  =
+        edibleFilter === "all"        ||
+        (edibleFilter === "edible"     &&  isEdible) ||
         (edibleFilter === "non-edible" && !isEdible);
       const matchesFavourite = !favouritesOnly || isFavourite;
 
-      card.style.display = matchesSearch && matchesEdible && matchesFavourite ? "" : "none";
+      card.style.display = (matchesSearch && matchesEdible && matchesFavourite) ? "" : "none";
     });
   }
 
-  // ── Edible — toggles off if already active ───────────────────
-  edibleBtn.addEventListener("click", () => {
-    if (edibleFilter === "edible") {
-      edibleFilter = "all";
-      edibleBtn.classList.remove("active");
-    } else {
-      edibleFilter = "edible";
-      edibleBtn.classList.add("active");
-      nonEdibleBtn.classList.remove("active");
-    }
-    applyFilters();
-  });
-
-  // ── Non edible — toggles off if already active ───────────────
-  nonEdibleBtn.addEventListener("click", () => {
-    if (edibleFilter === "non-edible") {
-      edibleFilter = "all";
-      nonEdibleBtn.classList.remove("active");
-    } else {
-      edibleFilter = "non-edible";
-      nonEdibleBtn.classList.add("active");
-      edibleBtn.classList.remove("active");
-    }
-    applyFilters();
-  });
-
-  // ── Favourites — toggles off if already active ───────────────
-  favouritesBtn.addEventListener("click", () => {
-    favouritesOnly = !favouritesOnly;
-    favouritesBtn.classList.toggle("active", favouritesOnly);
-    applyFilters();
-  });
-
-  // ── Show Favourites button only when ≥1 bookmarked ───────────
-  function updateFavouriteFilterVisibility() {
+  /**
+   * Shows the Favourites pill only when at least one card is bookmarked.
+   * If none are bookmarked the pill hides and the favourites filter resets.
+   */
+  function updateFavouritePillVisibility() {
     const hasFavourite = [...getCards()].some(c => c.dataset.favourite === "true");
+
     if (hasFavourite) {
       favouritesBtn.classList.remove("d-none");
     } else {
@@ -86,51 +78,84 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  updateFavouriteFilterVisibility();
+  /*  Event listeners  */
 
-  // ── Search ───────────────────────────────────────────────────
-  searchInput.addEventListener("input", applyFilters);
-
-  // ── Clear all filters ────────────────────────────────────────
-  clearBtn.addEventListener("click", () => {
-    edibleFilter = "all";
-    favouritesOnly = false;
-    searchInput.value = "";
-    edibleBtn.classList.remove("active");
-    nonEdibleBtn.classList.remove("active");
-    favouritesBtn.classList.remove("active");
-    applyFilters();
-    filterPanel.classList.add("d-none");
+  /** Toggle the filter panel open/closed */
+  filterBtn.addEventListener("click", () => {
+    const isHidden = filterPanel.classList.toggle("d-none");
+    filterBtn.setAttribute("aria-expanded", String(!isHidden));
   });
 
-  // ── Bookmark — persist to DB ─────────────────────────────────
+  edibleBtn.addEventListener("click", () => {
+    toggleEdiblePill("edible", edibleBtn, nonEdibleBtn);
+    applyFilters();
+  });
+
+  nonEdibleBtn.addEventListener("click", () => {
+    toggleEdiblePill("non-edible", nonEdibleBtn, edibleBtn);
+    applyFilters();
+  });
+
+  /** Favourites is a simple boolean toggle */
+  favouritesBtn.addEventListener("click", () => {
+    favouritesOnly = !favouritesOnly;
+    favouritesBtn.classList.toggle("active", favouritesOnly);
+    applyFilters();
+  });
+
+  searchInput.addEventListener("input", applyFilters);
+
+  /** Resets all filter state and closes the panel */
+  clearBtn.addEventListener("click", () => {
+    edibleFilter   = "all";
+    favouritesOnly = false;
+    searchInput.value = "";
+
+    [edibleBtn, nonEdibleBtn, favouritesBtn].forEach(b => b.classList.remove("active"));
+
+    applyFilters();
+    filterPanel.classList.add("d-none");
+    filterBtn.setAttribute("aria-expanded", "false");
+  });
+
+  /*  Bookmark / favourite persistence  */
+
+  /**
+   * Each bookmark button POSTs to /info/favourite to persist the change,
+   * then updates the button, its parent card's data attribute,
+   * and re-evaluates filter visibility + current filter results.
+   */
   document.querySelectorAll(".save-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
-      const plantId = btn.dataset.id;
-      const current = btn.dataset.favourite === "true";
+      const plantId   = btn.dataset.id;
+      const newState  = btn.dataset.favourite !== "true"; // flip current value
 
       try {
         const response = await fetch("/info/favourite", {
-          method: "POST",
+          method:  "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: plantId, favourite: !current })
+          body:    JSON.stringify({ id: plantId, favourite: newState })
         });
 
-        if (!response.ok) throw new Error("Failed");
+        if (!response.ok) throw new Error("Server returned non-OK status");
 
-        btn.dataset.favourite = String(!current);
-        btn.classList.toggle("saved", !current);
+        // Sync the button and its parent card with the new state
+        btn.dataset.favourite = String(newState);
+        btn.classList.toggle("saved", newState);
 
         const card = btn.closest(".plant-card");
-        card.dataset.favourite = String(!current);
+        card.dataset.favourite = String(newState);
 
-        updateFavouriteFilterVisibility();
+        updateFavouritePillVisibility();
         applyFilters();
 
       } catch (err) {
-        console.error("Favourite update failed", err);
+        console.error("Favourite update failed:", err);
       }
     });
   });
+
+  /* Init*/
+  updateFavouritePillVisibility();
 
 });

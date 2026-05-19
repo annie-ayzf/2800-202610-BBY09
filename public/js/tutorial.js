@@ -1,3 +1,5 @@
+
+/* Constants */
 const modal = document.getElementById("videoModal");
 const openBtn = document.getElementById("tutorial-btn");
 const closeBtn = document.querySelector(".close-icon");

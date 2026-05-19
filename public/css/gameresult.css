@@ -36,14 +36,3 @@
     overflow: hidden;
 }
 
-.result-green {
-    height: 100%;
-    background-color: #198754;
-    width: var(--greenWidth);
-}
-
-.result-red {
-    height: 100%;
-    background-color: #dc3545;
-    width: var(--redWidth);
-}

@@ -1,3 +1,4 @@
+  <!--Navigation Bar-->
   <link rel="stylesheet" href="/css/footer.css">
     <div class="bottom-nav">
       <a href="/info" class="nav-link-custom">
@@ -10,6 +11,8 @@
         <span class="material-icons nav-icon">account_circle</span>
       </a>
     </div>
+
+    <!-- Page Specfic Javascript-->
     <% if (typeof js !== 'undefined') { %>
       <% for(let i = 0; i < js.length; i++) { %>
         <script src="/js/<%= js[i] %>"></script>
