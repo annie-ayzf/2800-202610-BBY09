@@ -36,8 +36,17 @@ body {
 .progress-bar-custom {
     width: 75%;
     height: 18px;
+    background-color: #e5e5e5;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
     background-color: #b8c98a;
     border-radius: 20px;
+    transition: width 0.5s ease;
+    width: var(--progress); 
 }
 
 /* POINTS CIRCLE NOW */
@@ -74,14 +83,6 @@ body {
     padding: 20px;
 }
 
-/* QUIZ IMAGE */
-.quiz-img {
-    width: 85%;
-    max-width: 340px;
-
-    border-radius: 12px;
-    border: 6px solid #d8e4b2;
-}
 
 /* TRUE FALSE BUTTON AREA */
 .tf-buttons {
@@ -141,4 +142,36 @@ body {
 
 .answer-clicked {
     transform: scale(1.08);
+}
+
+.quiz-img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 6px solid #c4d79b;
+}
+
+@media (max-width: 500px) {
+    .quiz-img {
+        height: 320px;
+    }
+}
+
+.plant-name {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #4d3b2f;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+/* QUIZ NUMBER TEXT */
+.quiz-count {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4d3b2f;
+    margin-top: 10px;
 }

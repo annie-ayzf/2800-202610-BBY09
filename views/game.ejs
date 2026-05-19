@@ -1,60 +1,44 @@
 <%- include('templates/header', { pageTitle: 'Quiz', css: ['game.css'] })  %>
-<div class="app-container">
 
+<div class="app-container">
     <div class="phone-card">
 
         <div class="progress-area">
-
-            <div class="progress-bar-custom"></div>
-
-            <div class="question-number">
-                <%= questionNumber %>
+            <div class="progress-bar-custom">
+                <div class="progress-fill"
+                    style="--progress: <%= ((questionNumber - 1) / 5) * 100 %>%;">
+                </div>
             </div>
 
+            <div class="question-number">
+                <%= typeof totalPoints !== 'undefined' ? totalPoints : 0 %>
+            </div>
         </div>
 
         <div class="question-box">
             Is this edible?
         </div>
 
+        <div class="quiz-count">
+            <%= questionNumber %> / 5
+        </div>
+
         <div class="image-area">
+            <img src="<%= plant.image %>" class="quiz-img">
+        </div>
 
-            <img
-                src="<%= plant.image %>"
-                class="quiz-img">
-
+        <div class="plant-name">
+            <%= plant.name %>
         </div>
 
         <form method="POST" action="/answer">
-
             <div class="tf-buttons">
-
-                <button
-                    type="submit"
-                    name="answer"
-                    value="T"
-                    class="tf-btn true-btn">
-
-                    T
-
-                </button>
-
-                <button
-                    type="submit"
-                    name="answer"
-                    value="F"
-                    class="tf-btn false-btn">
-
-                    F
-
-                </button>
-
+                <button type="submit" name="answer" value="T" class="tf-btn true-btn">T</button>
+                <button type="submit" name="answer" value="F" class="tf-btn false-btn">F</button>
             </div>
-
         </form>
 
     </div>
-
 </div>
-<%- include('templates/footer', { js: ['game.js'] }) %>
 
+<%- include('templates/footer', { js: ['game.js'] }) %>

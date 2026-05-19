@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
+const { ObjectId } = require("mongodb");
 const { connectDB } = require("../../config/database");
+const { updateStudentPoints } = require('./profile');
 
 /* Game Functionality */
 router.get("/game", async (req, res) => {
 
   const db = await connectDB();
 
-  // first time quiz starts
   if (!req.session.questions) {
 
     const questions = await db
@@ -21,29 +22,48 @@ router.get("/game", async (req, res) => {
     req.session.score = 0;
   }
 
-  // finished all questions
   if (req.session.questionNumber >= 5) {
     return res.redirect("/gameresult");
   }
 
   const plant = req.session.questions[req.session.questionNumber];
 
+  let totalPoints = req.session.score || 0;
+
+  if (req.session.userId) {
+    const user = await db.collection("users").findOne({
+      _id: new ObjectId(req.session.userId)
+    });
+
+    if (user && user.points) {
+      totalPoints = user.points + (req.session.score || 0);
+    }
+  }
+
   res.render("game", {
-    plant,
-    questionNumber: req.session.questionNumber + 1
+    plant: plant,
+    questionNumber: req.session.questionNumber + 1,
+    totalPoints: totalPoints
   });
 });
 
 /* Correct / Wrong Answer */
 router.post("/answer", (req, res) => {
 
+  if (!req.session.questions || req.session.questionNumber == null) {
+    return res.redirect("/game");
+  }
+
   const plant = req.session.questions[req.session.questionNumber];
+
+  if (!plant) {
+    return res.redirect("/game");
+  }
 
   const userAnswer = req.body.answer;
 
   const correctAnswer = plant.isEdible ? "T" : "F";
 
-  // correct
   if (userAnswer === correctAnswer) {
     req.session.score++;
     req.session.questionNumber++;
@@ -51,7 +71,6 @@ router.post("/answer", (req, res) => {
     return res.redirect("/game");
   }
 
-  // wrong
   req.session.wrongPlant = plant;
   req.session.questionNumber++;
 
@@ -61,7 +80,9 @@ router.post("/answer", (req, res) => {
 });
 
 /* Incorrect Page */
-router.get("/gameincorrect", (req, res) => {
+router.get("/gameincorrect", async (req, res) => {
+
+  const db = await connectDB();
 
   const plant = req.session.wrongPlant;
 
@@ -69,9 +90,22 @@ router.get("/gameincorrect", (req, res) => {
     return res.redirect("/game");
   }
 
+  let totalPoints = req.session.score || 0;
+
+  if (req.session.userId) {
+    const user = await db.collection("users").findOne({
+      _id: new ObjectId(req.session.userId)
+    });
+
+    if (user && user.points) {
+      totalPoints = user.points + (req.session.score || 0);
+    }
+  }
+
   res.render("gameincorrect", {
-    plant,
-    questionNumber: req.session.questionNumber
+    plant: plant,
+    questionNumber: req.session.questionNumber,
+    totalPoints: totalPoints
   });
 });
 
@@ -81,11 +115,47 @@ router.get("/nextquestion", (req, res) => {
 });
 
 /* Results */
-router.get("/gameresult", (req, res) => {
+router.get("/gameresult", async (req, res) => {
+
+  const db = await connectDB();
+
+  const score = req.session.score || 0;
+  const total = 5;
+
+  if (req.session.userId && !req.session.scoreSaved) {
+    await db.collection("users").updateOne(
+      { _id: new ObjectId(req.session.userId) },
+      {
+        $inc: {
+          points: score,
+          quizzesPlayed: 1
+        }
+      }
+    );
+
+    req.session.scoreSaved = true;
+  }
+
+  let totalPoints = score;
+
+  if (req.session.userId) {
+    const user = await db.collection("users").findOne({
+      _id: new ObjectId(req.session.userId)
+    });
+
+    if (user && user.points) {
+      totalPoints = user.points;
+    }
+  }
+
+  // updating the student level at the end of game
+  await updateStudentPoints(req.session.email, score);
+
 
   res.render("gameresult", {
-    score: req.session.score,
-    total: 5
+    score: score,
+    total: total,
+    totalPoints: totalPoints
   });
 });
 
@@ -95,13 +165,20 @@ router.get("/restartquiz", (req, res) => {
   req.session.questions = null;
   req.session.questionNumber = 0;
   req.session.score = 0;
+  req.session.scoreSaved = false;
 
   res.redirect("/game");
 });
 
 /* Correct Screen */
 router.get("/gamecorrect", (req, res) => {
-  res.render("gamecorrect");
+
+  let totalPoints = req.session.score || 0;
+
+  res.render("gamecorrect", {
+    totalPoints: totalPoints,
+    questionNumber: req.session.questionNumber
+  });
 });
 
 module.exports = router;

@@ -13,25 +13,9 @@
         </div>
     </div>
     <div class="modal-img">
-        <!-- <a class="modal-close-btn" href="/profile"><img src="/images/close.svg" alt="" class="close-btn"></a>
-        <img src="/images/seedColor.svg" alt="" class="img-seed">
-        <h2 class="modal-tag-line"> You have unlocked a seed!</h2> -->
-
-        <!-- <a class="modal-close-btn" href="/profile"><img src="/images/close.svg" alt="" class="close-btn"></a>
-        <img src="/images/SproutColor1.svg" alt="" class="img-seed">
-        <h2 class="modal-tag-line"> You have unlocked a Sprout!</h2> -->
-
-        <!-- <a class="modal-close-btn" href="/profile"><img src="/images/close.svg" alt="" class="close-btn"></a>
-        <img src="/images/SeedlingColor.svg" alt="" class="img-seed">
-        <h2 class="modal-tag-line"> You have unlocked a Seedling!</h2> -->
-
-        <!-- <a class="modal-close-btn" href="/profile"><img src="/images/close.svg" alt="" class="close-btn"></a>
-        <img src="/images/youngTreeColor.svg" alt="" class="img-seed">
-        <h2 class="modal-tag-line"> You have unlocked a Young Tree!</h2> -->
-
-        <a class="modal-close-btn" href="/profile"><img src="/images/close.svg" alt="" class="close-btn"></a>
-        <img src="/images/fruitTreeColor_1.svg" alt="" class="img-seed">
-        <h2 class="modal-tag-line"> You have unlocked a Fruit Tree!</h2>
+        <a class="modal-close-btn" href="/profile"><img src="/images/close.svg" alt="close-button" class="close-btn"></a>
+        <img src="/images/<%= rewardImgModal %>" alt="" class="img-<%= rewardName %>">
+        <h2 class="modal-tag-line"> You have unlocked a <%= rewardName %>!</h2>
     </div>
 
-<%- include('templates/footer', { js: [''] }) %>
+<%- include('templates/footer') %>
