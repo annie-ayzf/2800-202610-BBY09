@@ -3,6 +3,7 @@
   <nav class="navbar position-relative">
     <div class="container-fluid justify-content-center position-relative">
 
+      <!-- Search Bar -->
       <div class="d-flex align-items-center gap-2 search-form">
         <input
           class="form-control search-input"
@@ -10,6 +11,9 @@
           placeholder="Eg.Blueberry"
           aria-label="Search"
         />
+
+        <div id="search-suggestions" class="search-suggestions d-none"></div>
+
         <button class="filter-button btn d-flex align-items-center justify-content-center" type="button">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#6B4F32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="4" y1="6" x2="20" y2="6"/>
@@ -40,6 +44,9 @@
         data-edible="<%= plant.isEdible %>"
         data-favourite="<%= plant.favourite %>"
         data-name="<%= plant.name.toLowerCase() %>"
+        data-scientific-name="<%= (plant.scientificName || '').toLowerCase() %>"
+        data-display-name="<%= plant.name %>"
+        data-display-scientific-name="<%= plant.scientificName || '' %>"
         data-description="<%= (plant.description || '').toLowerCase() %>"
       >
         <img src="<%= plant.image %>" class="card-img-top" alt="<%= plant.name %>" />
@@ -61,6 +68,7 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><b>Edible:</b> <%= plant.isEdible ? "True" : "False" %></li>
+          <li class="list-group-item"><b>Scientific Name:</b> <em><%= plant.scientificName %></em></li>
           <li class="list-group-item"><b>Location:</b> <%= plant.location %></li>
           <li class="list-group-item"><b>Habitat:</b> <%= plant.habitat %></li>
         </ul>
