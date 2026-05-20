@@ -1,6 +1,5 @@
 <%- include('templates/header', { pageTitle: 'Quiz', css: ['gameresult.css'] })  %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
 <div class="min-vh-100 d-flex flex-column px-3 py-4">
 
     <!-- WORK BANNER -->
@@ -12,14 +11,20 @@
     <div class="card text-center">
 
         <!-- Progress bar shows correct answers in green and missed answers in red -->
-        <div class="result-bar">
-            <div class="result-green"
-                style="--greenWidth: <%= (score / total) * 100 %>%">
-            </div>
-
-            <div class="result-red"
-                style="--redWidth: <%= ((total - score) / total) * 100 %>%">
-            </div>
+        <!-- Bootstrap animated striped bar — two segments share one container -->
+        <div class="result-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <!-- Green segment — width driven by --greenWidth CSS variable in gameresult.css -->
+            <div
+              class="progress-bar progress-bar-striped progress-bar-animated result-green"
+              style="--greenWidth: <%= (score / total) * 100 %>%"
+              aria-valuenow="<%= (score / total) * 100 %>"
+            ></div>
+            <!-- Red segment — width driven by --redWidth CSS variable in gameresult.css -->
+            <div
+              class="progress-bar progress-bar-striped progress-bar-animated result-red"
+              style="--redWidth: <%= ((total - score) / total) * 100 %>%"
+              aria-valuenow="<%= ((total - score) / total) * 100 %>"
+            ></div>
         </div>
 
         <!-- TOTAL POINT BOX -->
@@ -30,21 +35,18 @@
 
         <div class="card-footer text-body-secondary">
             <div class="d-flex gap-2 justify-content-center">
-
                 <div class="card border-success mb-3 flex-fill">
                     <div class="card-body text-success">
                         <h5 class="card-title">CORRECT</h5>
                         <p class="card-text"><%= score %></p>
                     </div>
                 </div>
-
                 <div class="card border-danger mb-3 flex-fill">
                     <div class="card-body text-danger">
                         <h5 class="card-title">MISSED</h5>
                         <p class="card-text"><%= total - score %></p>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -62,5 +64,4 @@
     </div>
 
 </div>
-
 <%- include('templates/footer') %>

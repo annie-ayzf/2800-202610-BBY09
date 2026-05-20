@@ -77,3 +77,16 @@
     width: var(--progress);
     background-color: #dc3545;
 }
+
+.col-4 img {
+    width: 100%;
+    height: 120px;
+    max-height: 120px;
+    object-fit: cover;
+}
+
+/* Constrains the page to phone width on desktop, matching game.css behaviour */
+.min-vh-100 {
+    max-width: 600px;
+    margin: 0 auto;
+}

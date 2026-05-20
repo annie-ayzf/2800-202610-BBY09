@@ -6,33 +6,47 @@
   --button-green: #67730e;
   --score: #d4aa5a;
 }
-
 .alert {
     text-align: center;
 }
-
 .card-header {
     background-color: var(--light-green);
     color: var(--light-cream);
 }
-
 .card-text {
     font-size: 2rem;
     font-weight: bold;
     color: #d4aa5a;
 }
-
 .btn {
     background-color: var(--button-green);
     color: var(--light-cream);
 }
-
 .result-bar {
     width: 100%;
-    height: 14px;
+    height: 32px;
     display: flex;
     background-color: #ddd;
     border-radius: 20px;
     overflow: hidden;
+    background-size: 1rem 1rem; /* smaller stripe pattern = smoother animation */
+}
+/* Green segment — width set via --greenWidth from gameresult.ejs */
+.result-green {
+    height: 100%;
+    background-color: #198754 !important;
+    background-size: 1rem 1rem;
+    width: var(--greenWidth);
+}
+/* Red segment — width set via --redWidth from gameresult.ejs */
+.result-red {
+    height: 100%;
+    background-color: #dc3545 !important;
+    background-size: 1rem 1rem;
+    width: var(--redWidth);
 }
 
+.min-vh-100 {
+    max-width: 600px;
+    margin: 0 auto;
+}

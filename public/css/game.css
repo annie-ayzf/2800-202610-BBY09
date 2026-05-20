@@ -174,3 +174,20 @@ body {
     color: #4d3b2f;
     margin-top: 10px;
 }
+
+.quiz-img {
+    width: 100%;
+    max-width: 400px;        /* caps it on wide screens */
+    height: 350px;
+    max-height: 60vw;        /* scales down on small screens */
+    object-fit: cover;
+    border-radius: 12px;
+    border: 6px solid #c4d79b;
+    display: block;
+    margin: 0 auto;          /* centers it when max-width kicks in */
+}
+
+.min-vh-100 {
+    max-width: 600px;
+    margin: 0 auto;
+}
